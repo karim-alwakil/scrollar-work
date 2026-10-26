@@ -1,0 +1,746 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Scrollar</title>
+<meta name="description" content="Scrollar is a Cairo studio building 3D scroll websites and booking systems for clinics, barbers, salons, events and brands.">
+<meta name="theme-color" content="#0b0b0f">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: one sticky 3D stage that tells the sector story, then an instrument-panel style catalogue. */
+:root{
+  color-scheme:dark;
+  /* Midnight + lime */
+  --bg:#0b0b0f; --panel:#15151b; --ink:#f5f5f7; --slate:#8a8f98; --neutral:#5b606a;
+  --espresso:#1d1f27; --tan:#c6ff3d; --accent:#c6ff3d; --line:rgba(245,245,247,.1); --onink:#0b0b0f; --wa:#25d366;
+  --sans:'Instrument Sans','Helvetica Neue',Arial,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+  --ar:'IBM Plex Sans Arabic','Geeza Pro',Tahoma,sans-serif;
+  --gut:max(16px,env(safe-area-inset-left,0px));
+}
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+html[lang=ar] body{font-family:var(--ar)}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+h1,h2,h3{text-wrap:balance;font-weight:600;letter-spacing:-.025em}
+html[lang=ar] h1,html[lang=ar] h2,html[lang=ar] h3{letter-spacing:0;line-height:1.25}
+.mono{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--slate)}
+html[lang=ar] .mono{font-family:var(--ar);letter-spacing:0;font-size:12.5px;text-transform:none}
+.mono b{color:var(--accent);font-weight:500}
+.wrap{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+@media(min-width:900px){.wrap{padding-left:max(56px,env(safe-area-inset-left,0px));padding-right:max(56px,env(safe-area-inset-right,0px))}}
+
+/* nav */
+nav{position:fixed;inset:0 0 auto 0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:16px;background:linear-gradient(var(--bg) 40%,transparent)}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:21px;letter-spacing:-.03em}
+.logo svg{width:24px;height:34px;flex:none}
+.links{display:flex;gap:28px;list-style:none}
+.links a{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--slate)}
+html[lang=ar] .links a{font-family:var(--ar);letter-spacing:0;font-size:14px;text-transform:none}
+.links a:hover{color:var(--ink)}
+.right{display:flex;gap:10px;align-items:center}
+.lang{font-family:var(--ar);font-size:14px;font-weight:600;border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:8px 14px;cursor:pointer;color:var(--ink)}
+html[lang=ar] .lang{font-family:var(--sans)}
+.btn{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--ink);padding:11px 18px;border-radius:999px;font-size:14px;font-weight:600;transition:.2s;cursor:pointer;background:transparent}
+.btn.solid{background:var(--ink);color:var(--onink)}
+.btn.solid:hover{background:var(--accent);border-color:var(--accent);color:var(--onink)}
+.btn:not(.solid):hover{border-color:var(--accent);color:var(--accent)}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--wa);box-shadow:0 0 0 4px rgba(37,211,102,.18)}
+
+/* story */
+#story{position:relative;height:620vh}
+.sticky{position:sticky;top:0;height:100vh;overflow:hidden}
+#stage{position:absolute;inset:0;width:100%;height:100%;display:block}
+.blueprint{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:64px 64px;opacity:.35;mask-image:radial-gradient(70% 70% at 60% 50%,#000,transparent)}
+.layer{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;pointer-events:none}
+.layer>*{pointer-events:auto}
+.hero{max-width:620px}
+.hero h1{font-size:clamp(44px,6.4vw,96px);line-height:.95;margin:18px 0 22px}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero p{color:var(--slate);font-size:18px;line-height:1.6;max-width:480px}
+.ctas{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
+.spec{display:flex;gap:36px;flex-wrap:wrap;margin-top:44px;padding-top:18px;border-top:1px solid var(--line);max-width:560px}
+.spec div{display:flex;flex-direction:column;gap:4px}
+.spec strong{font-size:28px;font-weight:600;letter-spacing:-.02em}
+.chapter{max-width:400px;border-inline-start:2px solid var(--ink);padding-inline-start:22px}
+.chapter .n{font-family:var(--mono);font-size:12px;color:var(--accent);margin-bottom:10px}
+.chapter h2{font-size:clamp(34px,4.2vw,58px);line-height:1;margin:6px 0 14px}
+.chapter p{color:var(--slate);font-size:16px;line-height:1.65}
+.chapter .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:16px}
+.tag{font-family:var(--mono);font-size:11px;padding:5px 10px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--ink)}
+html[lang=ar] .tag{font-family:var(--ar);font-size:12.5px}
+.track{position:absolute;inset-inline:max(16px,env(safe-area-inset-left,0px));bottom:24px;height:2px;background:var(--line)}
+@media(min-width:900px){.track{inset-inline:56px}}
+#progress{height:2px;background:var(--ink);transform-origin:left;transform:scaleX(0)}
+html[dir=rtl] #progress{transform-origin:right}
+
+/* sections */
+section.blk{padding-block:clamp(80px,11vw,150px);border-top:1px solid var(--line)}
+.head{display:grid;grid-template-columns:1fr 1.2fr;gap:32px;align-items:end;margin-bottom:56px}
+.head h2{font-size:clamp(36px,4.6vw,64px);line-height:1}
+.head p{color:var(--slate);font-size:17px;line-height:1.6;max-width:520px}
+
+/* sector rows: like an instrument spec sheet */
+.sectors{border-top:1px solid var(--ink)}
+.srow{display:grid;grid-template-columns:70px 1.1fr 1.6fr 160px;gap:24px;align-items:baseline;padding-block:26px;border-bottom:1px solid var(--line)}
+.srow .n{font-family:var(--mono);font-size:12px;color:var(--accent)}
+.srow h3{font-size:24px}
+.srow p{color:var(--slate);line-height:1.6;min-width:0}
+.srow .from{font-family:var(--mono);font-size:13px;text-align:end;color:var(--ink)}
+html[lang=ar] .srow .from{font-family:var(--ar)}
+
+/* portfolio */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+.filters button{font:inherit;font-size:14px;font-weight:500;padding:8px 16px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer}
+.filters button[aria-pressed=true]{background:var(--ink);color:var(--onink);border-color:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column}
+.tile .img{aspect-ratio:4/3;max-width:100%;display:grid;place-items:center;position:relative;background:radial-gradient(80% 80% at 50% 45%,#22232c,var(--bg))}
+.tile .img{aspect-ratio:16/9!important;overflow:hidden;background:#000!important}
+.tile .img img,.tile .img video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:none}
+.tile .img video{opacity:0;transition:opacity .5s}
+.tile .img video.on{opacity:1}
+.tile .img .badge{z-index:2}
+.tile.lead{grid-column:span 2}
+@media (max-width:620px){.tile.lead{grid-column:auto}}
+[hidden]{display:none!important}
+.tile .badge{position:absolute;top:12px;inset-inline-start:12px}
+.tile .body{padding:18px;display:flex;flex-direction:column;gap:6px;flex:1}
+.tile h3{font-size:19px}
+.tile p{color:var(--slate);font-size:14px;line-height:1.55}
+.tile .meta{display:flex;justify-content:space-between;gap:10px;margin-top:auto;padding-top:12px;border-top:1px solid var(--line)}
+.tile a.go{font-weight:600;font-size:14px;color:var(--accent)}
+.status{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;padding:4px 9px;border-radius:999px;background:var(--panel);border:1px solid var(--line)}
+html[lang=ar] .status{font-family:var(--ar);letter-spacing:0;font-size:12px;text-transform:none}
+.status.live{background:var(--ink);color:var(--onink);border-color:var(--ink)}
+
+/* process */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--ink)}
+.steps>div{padding:28px 24px 8px 0;border-inline-end:1px solid var(--line);margin-inline-end:24px}
+html[dir=rtl] .steps>div{padding:28px 0 8px 24px}
+.steps>div:last-child{border:0}
+.steps .k{font-family:var(--mono);font-size:12px;color:var(--accent)}
+.steps h3{font-size:21px;margin:12px 0 8px}
+.steps p{color:var(--slate);line-height:1.6}
+
+/* pricing table */
+.ptable{width:100%;border-collapse:collapse;font-size:15px}
+.ptable th{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--slate);font-weight:500;text-align:start;padding:10px 12px;border-bottom:1px solid var(--ink)}
+html[lang=ar] .ptable th{font-family:var(--ar);letter-spacing:0;font-size:13px;text-transform:none}
+.ptable td{padding:16px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+.ptable td:nth-child(2),.ptable td:nth-child(3){font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:600}
+.ptable td small{display:block;color:var(--slate);font-weight:400;margin-top:4px}
+.tablewrap{overflow-x:auto}
+.note{color:var(--slate);font-size:14px;margin-top:16px}
+
+/* cta */
+.cta{padding-block:clamp(100px,14vw,200px);border-top:1px solid var(--line);text-align:center;background:radial-gradient(60% 70% at 50% 100%,rgba(198,255,61,.14),transparent)}
+.cta h2{font-size:clamp(46px,7.5vw,116px);line-height:.95;margin:18px 0 22px}
+.cta p{color:var(--slate);font-size:18px;margin-bottom:30px}
+.cta .cnum{font-family:var(--mono);font-size:14px;margin-top:18px;color:var(--slate);user-select:all}
+footer{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;padding-block:26px;border-top:1px solid var(--line)}
+
+
+/* numbers */
+.nums{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.num{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:28px 26px 26px;overflow:hidden;min-height:250px;display:flex;flex-direction:column}
+.num::before{content:"";position:absolute;inset:auto -30% -60% auto;width:70%;aspect-ratio:1;border-radius:50%;background:radial-gradient(closest-side,rgba(198,255,61,.12),transparent);opacity:0;transition:opacity 1.2s}
+.num.in::before{opacity:1}
+.num .v{display:flex;align-items:baseline;gap:6px;font-weight:600;letter-spacing:-.05em;line-height:.9}
+.num .v b{font-size:clamp(64px,7vw,104px);font-weight:600;color:var(--accent);font-variant-numeric:tabular-nums}
+.num .v span{font-size:clamp(22px,2.2vw,30px);color:var(--ink)}
+.num h3{font-size:19px;margin-top:14px}
+.num p{color:var(--slate);font-size:14.5px;line-height:1.55;margin-top:6px}
+.num .viz{margin-top:auto;padding-top:22px}
+.segs{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}.segs i{height:8px;border-radius:4px;background:var(--line);transition:background .25s}.segs i.on{background:var(--accent)}
+.segs+small,.half+small{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--slate);margin-top:8px;text-transform:uppercase}
+html[lang=ar] .segs+small,html[lang=ar] .half+small{font-family:var(--ar);letter-spacing:0;font-size:12px;text-transform:none}
+.clock{width:64px;height:64px}.clock circle{fill:none;stroke-width:6}.clock .bgc{stroke:var(--line)}.clock .fg{stroke:var(--accent);stroke-linecap:round;stroke-dasharray:176;stroke-dashoffset:176;transform:rotate(-90deg);transform-origin:50% 50%}
+.tapv{display:flex;align-items:center;gap:14px}.tapb{position:relative;width:52px;height:52px;border-radius:50%;background:var(--accent);display:grid;place-items:center}.tapb svg path{fill:var(--onink)}.tapb::after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid var(--accent);animation:ping 1.8s infinite}
+@keyframes ping{0%{transform:scale(1);opacity:.8}100%{transform:scale(1.9);opacity:0}}
+.tapv em{font-style:normal;font-family:var(--mono);font-size:12px;color:var(--slate)}
+.flip{position:relative;height:44px;overflow:hidden;border:1px solid var(--line);border-radius:12px}
+.flip div{position:absolute;inset:0;display:grid;place-items:center;font-weight:600;font-size:17px;transition:transform .6s cubic-bezier(.7,0,.2,1)}
+.flip .ar{font-family:var(--ar);transform:translateY(100%)}.flip.alt .en{transform:translateY(-100%)}.flip.alt .ar{transform:translateY(0)}
+.dots{display:grid;grid-template-columns:repeat(8,1fr);gap:8px}.dots i{aspect-ratio:1;border-radius:50%;background:var(--line);transform:scale(.6);transition:.4s cubic-bezier(.3,1.6,.5,1)}.dots i.on{background:var(--accent);transform:scale(1)}
+.half{height:10px;border-radius:5px;background:var(--line);overflow:hidden}.half i{display:block;height:100%;width:0;background:var(--accent);border-radius:5px;transition:width 1.4s cubic-bezier(.2,.8,.2,1)}
+@media(max-width:900px){.nums{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.nums{grid-template-columns:1fr}.num{min-height:0}}
+@media(prefers-reduced-motion:reduce){.tapb::after{animation:none}}
+
+/* guarantee strip */
+.guar{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--line);border-radius:22px;overflow:hidden;background:var(--panel)}
+.guar>div{padding:26px 26px 24px;display:flex;gap:16px;align-items:flex-start;border-inline-end:1px solid var(--line)}
+.guar>div:last-child{border:0}
+.guar .ic{flex:none;width:42px;height:42px;border-radius:12px;background:rgba(198,255,61,.12);display:grid;place-items:center;color:var(--accent)}
+.guar h3{font-size:18px}.guar p{color:var(--slate);font-size:14.5px;line-height:1.55;margin-top:6px}
+/* calculator */
+.calc{display:grid;grid-template-columns:1.35fr 1fr;gap:18px;margin-top:40px}
+.cpanel{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:26px}
+.cgroup+.cgroup{margin-top:24px}
+.cgroup>label,.cgroup>.lab{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--slate);margin-bottom:10px}
+html[lang=ar] .cgroup>label,html[lang=ar] .cgroup>.lab{font-family:var(--ar);letter-spacing:0;font-size:13px;text-transform:none}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips button,.toggles button{font:inherit;font-size:14px;font-weight:500;padding:9px 15px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer;transition:.15s}
+.chips button[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:var(--onink)}
+.toggles{display:grid;gap:8px}
+.toggles button{display:flex;justify-content:space-between;align-items:center;border-radius:14px;text-align:start;padding:12px 14px}
+.toggles button small{color:var(--slate);font-family:var(--mono);font-size:12px}
+.toggles button[aria-pressed=true]{border-color:var(--accent);background:rgba(198,255,61,.08)}
+.toggles button i{width:18px;height:18px;border-radius:6px;border:1.5px solid var(--slate);margin-inline-end:10px;flex:none;display:grid;place-items:center;font-style:normal;font-size:12px;color:var(--onink)}
+.toggles button[aria-pressed=true] i{background:var(--accent);border-color:var(--accent)}
+.toggles button span{display:flex;align-items:center}
+.stepper{display:flex;align-items:center;gap:12px}
+.stepper button{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--ink);font-size:18px;cursor:pointer}
+.stepper b{min-width:28px;text-align:center;font-size:18px}
+.quote{position:sticky;top:90px;align-self:start;background:var(--ink);color:var(--onink);border-radius:22px;padding:28px}
+.quote .mono{color:#5b606a}
+.quote .tot{font-size:clamp(44px,5vw,64px);font-weight:600;letter-spacing:-.04em;line-height:1;margin:10px 0 4px;font-variant-numeric:tabular-nums}
+.quote .tot small{font-size:18px;font-weight:500;margin-inline-start:6px}
+.qrows{margin:18px 0;border-top:1px solid rgba(11,11,15,.12)}
+.qrows div{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid rgba(11,11,15,.12);font-size:14.5px}
+.qrows b{font-variant-numeric:tabular-nums}
+.quote .btn{background:var(--onink);color:var(--ink);border-color:var(--onink);width:100%;justify-content:center}
+.quote .btn:hover{background:var(--accent);color:var(--onink);border-color:var(--accent)}
+.quote .fine{font-size:12.5px;color:#5b606a;margin-top:12px;line-height:1.5}
+/* faq */
+.faq{border-top:1px solid var(--ink)}
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:20px;padding:22px 0;font-size:19px;font-weight:600}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-weight:400;font-size:26px;color:var(--accent);transition:transform .25s}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq details p{color:var(--slate);line-height:1.7;padding:0 0 22px;max-width:760px}
+/* preview form */
+.pform{max-width:760px;margin:40px auto 0;background:var(--panel);border:1px solid var(--line);border-radius:26px;padding:clamp(22px,4vw,40px)}
+.pbar{display:flex;gap:6px;margin-bottom:26px}.pbar i{flex:1;height:4px;border-radius:2px;background:var(--line);transition:background .3s}.pbar i.on{background:var(--accent)}
+.pstep{display:none}.pstep.on{display:block;animation:pin .35s cubic-bezier(.2,.8,.2,1)}
+@keyframes pin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.pstep h3{font-size:clamp(24px,3vw,32px);margin-bottom:18px}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fields label{display:grid;gap:6px;font-size:13px;color:var(--slate)}
+.fields label.full{grid-column:1/-1}
+.fields input,.fields select{font:inherit;font-size:16px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:13px 14px}
+.fields input:focus,.fields select:focus{outline:none;border-color:var(--accent)}
+.pnav{display:flex;justify-content:space-between;gap:10px;margin-top:26px}
+.pnav .btn{border-color:var(--line)}
+.pnav .btn.solid{border-color:var(--ink)}
+.pnav .btn[disabled]{opacity:.35;pointer-events:none}
+.perr{color:#ff6b6b;font-size:13px;margin-top:10px;min-height:18px}
+.pnote{text-align:center;color:var(--slate);font-size:13px;margin-top:14px}
+footer .legal{display:flex;gap:18px}
+footer .legal a{color:var(--slate);font-size:13px}footer .legal a:hover{color:var(--ink)}
+@media(max-width:900px){.calc{grid-template-columns:1fr}.quote{position:static}.guar{grid-template-columns:1fr}.guar>div{border-inline-end:0;border-bottom:1px solid var(--line)}}
+@media(max-width:560px){.fields{grid-template-columns:1fr}}
+
+@media(max-width:760px){
+  .links{display:none}
+  .btn.hide-m{display:none}
+  .layer{justify-content:flex-end;padding-bottom:76px}
+  .hero,.chapter{background:linear-gradient(transparent,var(--bg) 22%);margin-inline:-16px;padding:64px 16px 0}
+  .chapter{border:0}
+  .hero h1{font-size:42px}
+  .hero p{font-size:16px}
+  .spec{gap:20px;margin-top:24px}
+  .spec strong{font-size:22px}
+  .head,.steps{grid-template-columns:1fr}
+  .srow{grid-template-columns:44px 1fr;row-gap:6px}
+  .srow p,.srow .from{grid-column:2;text-align:start}
+  .steps>div{border-inline-end:0;border-bottom:1px solid var(--line);margin-inline-end:0}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<nav class="wrap">
+  <a class="logo" href="#" aria-label="Scrollar">
+    <svg viewBox="0 0 24 34" aria-hidden="true"><rect x="1.5" y="1.5" width="21" height="31" rx="10.5" fill="none" stroke="#f5f5f7" stroke-width="2.5"/><rect x="7.5" y="6.5" width="9" height="12" rx="4.5" fill="#c6ff3d"/><circle cx="12" cy="26" r="1.6" fill="#8a8f98"/></svg>
+    <span data-i18n="brand">Scrollar</span>
+  </a>
+  <ul class="links">
+    <li><a href="#sectors" data-i18n="nav.sectors">Sectors</a></li>
+    <li><a href="#work" data-i18n="nav.work">Work</a></li>
+    <li><a href="#pricing" data-i18n="nav.pricing">Pricing</a></li>
+  </ul>
+  <div class="right">
+    <button class="lang" id="lang" type="button" aria-label="Switch language">عربي</button>
+    <a class="btn solid hide-m" href="https://wa.me/?text=Hi%20Scrollar" target="_blank" rel="noopener"><span data-i18n="nav.cta">Talk to us</span></a>
+  </div>
+</nav>
+
+<div id="story">
+  <div class="sticky">
+    <div class="blueprint"></div>
+    <canvas id="stage" aria-label="3D objects for each industry Scrollar builds for"></canvas>
+
+    <div class="layer wrap" data-step="0,0.1">
+      <div class="hero">
+        <div class="mono" data-i18n-html="hero.eyebrow">[ <b>3D web studio</b> / Cairo ]</div>
+        <h1 data-i18n-html="hero.h1">Websites people <em>scroll through</em>, not past.</h1>
+        <p data-i18n="hero.p">Scrollar builds 3D scroll websites and booking systems for clinics, barbers, salons, events and brands. Every visit ends at one button: book on WhatsApp.</p>
+        <div class="ctas">
+          <a class="btn solid" href="#work" data-i18n="hero.cta1">See the work</a>
+          <a class="btn" href="#preview" data-i18n="hero.cta2">Free preview in 24h</a>
+        </div>
+        <div class="spec">
+          <div><strong data-i18n="spec.1v">5 sectors</strong><span class="mono" data-i18n="spec.1k">One studio</span></div>
+          <div><strong data-i18n="spec.2v">7 days</strong><span class="mono" data-i18n="spec.2k">To launch</span></div>
+          <div><strong data-i18n="spec.3v">2 languages</strong><span class="mono" data-i18n="spec.3k">Arabic + English</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="layer wrap" data-step="0.13,0.27"><div class="chapter">
+      <div class="n"><bdi dir="ltr">01 / 05</bdi></div><div class="mono" data-i18n="c1.k">Clinics</div>
+      <h2 data-i18n="c1.h">Show the treatment before the chair.</h2>
+      <p data-i18n="c1.p">Implants, veneers and aligners explained in 3D, so patients arrive informed and ready to book.</p>
+      <div class="tags"><span class="tag" data-i18n="c1.t1">Dental</span><span class="tag" data-i18n="c1.t2">Dermatology</span><span class="tag" data-i18n="c1.t3">Physio</span></div>
+    </div></div>
+
+    <div class="layer wrap" data-step="0.29,0.43"><div class="chapter">
+      <div class="n"><bdi dir="ltr">02 / 05</bdi></div><div class="mono" data-i18n="c2.k">Barbers and salons</div>
+      <h2 data-i18n="c2.h">A full chair, without the phone ringing.</h2>
+      <p data-i18n="c2.p">Customers pick the service, the barber or stylist and the time. You get every booking on WhatsApp.</p>
+      <div class="tags"><span class="tag" data-i18n="c2.t1">Barbers</span><span class="tag" data-i18n="c2.t2">Women's salons</span><span class="tag" data-i18n="c2.t3">Nails and lashes</span></div>
+    </div></div>
+
+    <div class="layer wrap" data-step="0.45,0.59"><div class="chapter">
+      <div class="n"><bdi dir="ltr">03 / 05</bdi></div><div class="mono" data-i18n="c3.k">Events</div>
+      <h2 data-i18n="c3.h">Invitations guests actually open.</h2>
+      <p data-i18n="c3.p">3D wedding invitations and birthday cards with the venue map, a countdown and RSVP in one link.</p>
+      <div class="tags"><span class="tag" data-i18n="c3.t1">Weddings</span><span class="tag" data-i18n="c3.t2">Engagements</span><span class="tag" data-i18n="c3.t3">Birthdays</span></div>
+    </div></div>
+
+    <div class="layer wrap" data-step="0.61,0.75"><div class="chapter">
+      <div class="n"><bdi dir="ltr">04 / 05</bdi></div><div class="mono" data-i18n="c4.k">Products</div>
+      <h2 data-i18n="c4.h">Launch it like a flagship.</h2>
+      <p data-i18n="c4.p">Apple-style product pages for local brands: perfume, skincare, coffee, electronics.</p>
+      <div class="tags"><span class="tag" data-i18n="c4.t1">Brands</span><span class="tag" data-i18n="c4.t2">Launches</span><span class="tag" data-i18n="c4.t3">Company profiles</span></div>
+    </div></div>
+
+    <div class="layer wrap" data-step="0.77,0.91"><div class="chapter">
+      <div class="n"><bdi dir="ltr">05 / 05</bdi></div><div class="mono" data-i18n="c5.k">Booking engine</div>
+      <h2 data-i18n="c5.h">Schedules that run themselves.</h2>
+      <p data-i18n="c5.p">Staff calendars, reminders and a monthly heatmap report showing where customers tap and what they book.</p>
+      <div class="tags"><span class="tag" data-i18n="c5.t1">Schedules</span><span class="tag" data-i18n="c5.t2">Reminders</span><span class="tag" data-i18n="c5.t3">Heatmaps</span></div>
+    </div></div>
+
+    <div class="layer wrap" data-step="0.93,1"><div class="hero">
+      <div class="mono" data-i18n="end.k">[ One studio ]</div>
+      <h1 data-i18n-html="end.h">Your business, <em>in 3D.</em></h1>
+      <div class="ctas"><a class="btn solid" href="#work" data-i18n="hero.cta1">See the work</a></div>
+    </div></div>
+
+    <div class="track"><div id="progress"></div></div>
+  </div>
+</div>
+
+<section class="blk wrap" id="numbers">
+  <div class="head"><div><span class="mono" data-i18n="n.k">[ Scrollar in numbers ]</span><h2 data-i18n="n.h">Built fast. Built to book.</h2></div><p data-i18n="n.p">What every Scrollar site ships with, from the first message to the first booking.</p></div>
+  <div class="nums">
+    <div class="num"><div class="v"><b data-count="7">0</b><span data-i18n="n1.u">days</span></div><h3 data-i18n="n1.h">From first DM to live</h3><p data-i18n="n1.p">Preview on day 1, your 3D scene by day 5, your own domain on day 7.</p>
+      <div class="viz"><div class="segs" id="segs"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><small><span data-i18n="n1.a">Day 1</span><span data-i18n="n1.b">Live</span></small></div></div>
+    <div class="num"><div class="v"><b data-count="24">0</b><span data-i18n="n2.u">hours</span></div><h3 data-i18n="n2.h">Free preview, made for you</h3><p data-i18n="n2.p">Built from your real name, services and reviews. No payment, no commitment.</p>
+      <div class="viz"><svg class="clock" viewBox="0 0 64 64"><circle class="bgc" cx="32" cy="32" r="28"/><circle class="fg" id="clockFg" cx="32" cy="32" r="28"/></svg></div></div>
+    <div class="num"><div class="v"><b data-count="1">0</b><span data-i18n="n3.u">tap</span></div><h3 data-i18n="n3.h">From any scene to WhatsApp</h3><p data-i18n="n3.p">Every visit ends at one button. The booking lands in your WhatsApp, no app needed.</p>
+      <div class="viz"><div class="tapv"><div class="tapb"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#fff" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm4.4 12c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.5.1l-.8.9c-.1.2-.3.2-.5.1a6.6 6.6 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.5-.4h-.5a.9.9 0 0 0-.7.3 2.8 2.8 0 0 0-.9 2.1 4.9 4.9 0 0 0 1 2.6 11.2 11.2 0 0 0 4.3 3.8c1.6.7 2.2.7 3 .6a2.6 2.6 0 0 0 1.7-1.2 2.1 2.1 0 0 0 .1-1.2c0-.1-.2-.2-.4-.3z"/></svg></div><em data-i18n="n3.e">New booking · 8:30 PM</em></div></div></div>
+    <div class="num"><div class="v"><b data-count="2">0</b><span data-i18n="n4.u">languages</span></div><h3 data-i18n="n4.h">Arabic and English</h3><p data-i18n="n4.p">Right-to-left done properly, with Egyptian or Gulf Arabic copy that sounds local.</p>
+      <div class="viz"><div class="flip" id="flip"><div class="en">Book now</div><div class="ar">احجز دلوقتي</div></div></div></div>
+    <div class="num"><div class="v"><b data-count="8">0</b><span data-i18n="n5.u">live concepts</span></div><h3 data-i18n="n5.h">Five sectors, one engine</h3><p data-i18n="n5.p">Clinics, barbers, salons, events and products, each with its own 3D scene.</p>
+      <div class="viz"><div class="dots" id="dots"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div></div>
+    <div class="num"><div class="v"><b data-count="50">0</b><span>%</span></div><h3 data-i18n="n6.h">To start, the rest at launch</h3><p data-i18n="n6.p">Pay half to begin and half when it is live. You own the domain and the code.</p>
+      <div class="viz"><div class="half"><i id="half"></i></div><small><span data-i18n="n6.a">Start</span><span data-i18n="n6.b">Launch</span></small></div></div>
+  </div>
+</section>
+
+<section class="blk wrap" id="sectors">
+  <div class="head">
+    <div><div class="mono" data-i18n="sec.k">[ Sectors ]</div><h2 data-i18n="sec.h">One engine. Five industries.</h2></div>
+    <p data-i18n="sec.p">Each sector has its own 3D scene, copy and booking flow, ready in Arabic and English. That is why we deliver in days.</p>
+  </div>
+  <div class="sectors">
+    <div class="srow"><span class="n">01</span><h3 data-i18n="c1.k">Clinics</h3><p data-i18n="s1.p">3D treatment stories, treatment pages, WhatsApp booking.</p><span class="from" data-i18n="s1.f">from 9,900 EGP</span></div>
+    <div class="srow"><span class="n">02</span><h3 data-i18n="c2.k">Barbers and salons</h3><p data-i18n="s2.p">Booking with staff schedules, time slots, deposits and reminders.</p><span class="from" data-i18n="s2.f">from 12,000 EGP</span></div>
+    <div class="srow"><span class="n">03</span><h3 data-i18n="c3.k">Events</h3><p data-i18n="s3.p">3D invitations and cards with map, countdown and RSVP.</p><span class="from" data-i18n="s3.f">from 1,500 EGP</span></div>
+    <div class="srow"><span class="n">04</span><h3 data-i18n="c4.k">Products</h3><p data-i18n="s4.p">Flagship 3D product pages and company profiles.</p><span class="from" data-i18n="s4.f">from 15,000 EGP</span></div>
+    <div class="srow"><span class="n">05</span><h3 data-i18n="c5.k">Booking engine</h3><p data-i18n="s5.p">Add schedules and reports to any Scrollar site.</p><span class="from" data-i18n="s5.f">from 600 EGP / month</span></div>
+  </div>
+</section>
+
+<section class="blk wrap" id="work">
+  <div class="head">
+    <div><div class="mono" data-i18n="work.k">[ Portfolio ]</div><h2 data-i18n="work.h">Concept work, by sector.</h2></div>
+    <p data-i18n="work.p">These are studio concepts for invented businesses, built to show what each sector gets. Client work replaces them as projects launch.</p>
+  </div>
+  <div class="filters" role="group" aria-label="Filter by sector">
+    <button type="button" aria-pressed="true" data-f="all" data-i18n="f.all">All</button>
+    <button type="button" aria-pressed="false" data-f="clinic" data-i18n="c1.k">Clinics</button>
+    <button type="button" aria-pressed="false" data-f="beauty" data-i18n="c2.k">Barbers and salons</button>
+    <button type="button" aria-pressed="false" data-f="event" data-i18n="c3.k">Events</button>
+    <button type="button" aria-pressed="false" data-f="product" data-i18n="c4.k">Products</button>
+  </div>
+  <div class="grid" id="grid">
+    <article class="tile lead" data-s="beauty"><div class="img"><img data-src="shot-maqass" alt=""><video data-clip="maqass" muted loop playsinline preload="none"></video><span class="status live badge" data-i18n="st.flag">New flagship</span></div><div class="body"><span class="mono" data-i18n="p10.m">Barber atelier / Zamalek</span><h3>Maqass</h3><p data-i18n="p10.p">Cinematic barbershop footage and editorial type: the hero shrinks into a frame as you scroll, the menu plays on hover. Booking in four taps.</p><div class="meta"><a class="go" href="barbers/maqass/" data-link="maqass" data-i18n="st.open">Open concept</a></div></div></article>
+    <article class="tile" data-s="clinic"><div class="img"><img data-src="shot-enamel" alt=""><video data-clip="enamel" muted loop playsinline preload="none"></video><span class="status live badge" data-i18n="st.live">Live concept</span></div><div class="body"><span class="mono" data-i18n="p11.m">Dental studio / New Cairo</span><h3>Enamel</h3><p data-i18n="p11.p">A real scanned molar passes through a light scan and turns to X-ray, then enamel, dentin and the nerve light up one by one, each with its treatment.</p><div class="meta"><a class="go" href="clinics/enamel/" data-link="enamel" data-i18n="st.open">Open concept</a></div></div></article>
+    <article class="tile" data-s="clinic"><div class="img"><img data-src="shot-dar" alt=""><video data-clip="dar" muted loop playsinline preload="none"></video><span class="status live badge" data-i18n="st.live">Live concept</span></div><div class="body"><span class="mono" data-i18n="p12.m">Family dental clinic / Heliopolis</span><h3>Dar Dental</h3><p data-i18n="p12.p">No 3D, just people: a real day at the clinic scrolls past as a film strip while the clock runs from 9 to 8, then clear prices and first-visit booking.</p><div class="meta"><a class="go" href="clinics/dar/" data-link="dar" data-i18n="st.open">Open concept</a></div></div></article>
+    <article class="tile" data-s="clinic"><div class="img"><img data-src="shot-dental" alt=""><video data-clip="dental" muted loop playsinline preload="none"></video><span class="status live badge" data-i18n="st.live">Live concept</span></div><div class="body"><span class="mono" data-i18n="p1.m">Dental implants / Cairo</span><h3>Lumen Dental Studio</h3><p data-i18n="p1.p">An implant that assembles itself as the patient scrolls.</p><div class="meta"><a class="go" href="dental/" id="dentalLink" data-i18n="st.open">Open concept</a></div></div></article>
+    <article class="tile" data-s="beauty"><div class="img"><img data-src="shot-fade" alt=""><video data-clip="fade" muted loop playsinline preload="none"></video><span class="status live badge" data-i18n="st.live">Live concept</span></div><div class="body"><span class="mono" data-i18n="p3.m">Barbershop / Cairo</span><h3>Fade District</h3><p data-i18n="p3.p">Pick your barber, your cut and your slot in four taps.</p><div class="meta"><a class="go" href="beauty/fade-district-c/" data-link="fade" data-i18n="st.open">Open concept</a></div></div></article>
+    <article class="tile" data-s="beauty"><div class="img"><img data-src="shot-noor" alt=""><video data-clip="noor" muted loop playsinline preload="none"></video><span class="status live badge" data-i18n="st.live">Live concept</span></div><div class="body"><span class="mono" data-i18n="p4.m">Women's salon / New Cairo</span><h3>Maison Noor</h3><p data-i18n="p4.p">Glossy liquid colour pours a new shade for every chapter: blush, caramel, cherry. Women-only booking.</p><div class="meta"><a class="go" href="beauty/maison-noor/" data-link="noor" data-i18n="st.open">Open concept</a></div></div></article>
+    <article class="tile" data-s="beauty"><div class="img"><img data-src="shot-majlis" alt=""><video data-clip="majlis" muted loop playsinline preload="none"></video><span class="status live badge" data-i18n="st.live">Live concept</span></div><div class="body"><span class="mono" data-i18n="p5.m">Grooming lounge / Riyadh</span><h3>Al Majlis Grooming</h3><p data-i18n="p5.p">A thread of oud smoke writes Arabic calligraphy as you scroll. Booking with deposits.</p><div class="meta"><a class="go" href="beauty/al-majlis/" data-link="majlis" data-i18n="st.open">Open concept</a></div></div></article>
+    <article class="tile" data-s="event"><div class="img"><img data-src="shot-layla" alt=""><video data-clip="layla" muted loop playsinline preload="none"></video><span class="status live badge" data-i18n="st.live">Live concept</span></div><div class="body"><span class="mono" data-i18n="p6.m">Wedding invitation / Cairo</span><h3>Layla &amp; Omar</h3><p data-i18n="p6.p">A sparkler writes the names in light as you scroll. Countdown, map and WhatsApp RSVP in one link.</p><div class="meta"><a class="go" href="events/layla-omar/" data-link="invite" data-i18n="st.open">Open concept</a></div></div></article>
+    <article class="tile" data-s="event"><div class="img"><img data-src="shot-dahab" alt=""><video data-clip="dahab" muted loop playsinline preload="none"></video><span class="status live badge" data-i18n="st.live">Live concept</span></div><div class="body"><span class="mono" data-i18n="p9.m">Sports event / Dahab</span><h3>Dahab Air Clash</h3><p data-i18n="p9.p">A drone follows a kitesurfer across the Blue Lagoon. Every turn is a chapter, then passes and rider sign-ups on WhatsApp.</p><div class="meta"><a class="go" href="events/dahab-air-clash/" data-link="dahab" data-i18n="st.open">Open concept</a></div></div></article>
+    <article class="tile" data-s="product"><div class="img"><img data-src="shot-qamar" alt=""><video data-clip="qamar" muted loop playsinline preload="none"></video><span class="status live badge" data-i18n="st.live">Live concept</span></div><div class="body"><span class="mono" data-i18n="p7.m">Product launch / Cairo</span><h3>Qamar One</h3><p data-i18n="p7.p">A smart home dial that wakes up, then opens into every part: screws, chip, battery and all.</p><div class="meta"><a class="go" href="products/qamar-one/" data-link="qamar" data-i18n="st.open">Open concept</a></div></div></article>
+  </div>
+</section>
+
+<section class="blk wrap">
+  <div class="head">
+    <div><div class="mono" data-i18n="pr.k">[ Process ]</div><h2 data-i18n="pr.h">From DM to live in a week.</h2></div>
+    <p data-i18n="pr.p">You send your Instagram and a voice note. We send a free preview made for your business within 24 hours.</p>
+  </div>
+  <div class="steps">
+    <div><span class="k" data-i18n="pr.1k">Day 1</span><h3 data-i18n="pr.1h">Free preview</h3><p data-i18n="pr.1p">A first version built from your real name, services and reviews.</p></div>
+    <div><span class="k" data-i18n="pr.2k">Day 2 to 5</span><h3 data-i18n="pr.2h">Your 3D scene</h3><p data-i18n="pr.2p">The scene, booking flow and copy, tuned with your feedback.</p></div>
+    <div><span class="k" data-i18n="pr.3k">Day 6 to 7</span><h3 data-i18n="pr.3h">Launch</h3><p data-i18n="pr.3p">Your own domain, Google Maps linked, and a monthly report.</p></div>
+  </div>
+</section>
+
+<section class="wrap" style="padding-bottom:clamp(60px,8vw,110px)">
+  <div class="guar">
+    <div><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><div><h3 data-i18n="g1.h">Love the preview or pay nothing</h3><p data-i18n="g1.p">The preview is free. You only pay the first 50% when you decide to go ahead.</p></div></div>
+    <div><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg></span><div><h3 data-i18n="g2.h">Two revision rounds included</h3><p data-i18n="g2.p">Change copy, colours and scenes twice before launch, at no extra cost.</p></div></div>
+    <div><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="m10.8 12.2 9.2-9.2M17 6l3 3M14 9l2 2"/></svg></span><div><h3 data-i18n="g3.h">Yours to keep</h3><p data-i18n="g3.p">Your domain, your code and your customer data. No lock-in, no platform fees.</p></div></div>
+  </div>
+</section>
+
+<section class="blk wrap" id="pricing">
+  <div class="head">
+    <div><div class="mono" data-i18n="pz.k">[ Pricing ]</div><h2 data-i18n="pz.h">Clear prices. Half to start.</h2></div>
+    <p data-i18n="pz.p">50% to start and 50% at launch, by InstaPay or bank transfer. You own the domain and the code.</p>
+  </div>
+  <div class="tablewrap">
+    <table class="ptable">
+      <thead><tr><th data-i18n="pz.c1">Package</th><th data-i18n="pz.c2">One time</th><th data-i18n="pz.c3">Monthly</th><th data-i18n="pz.c4">Includes</th></tr></thead>
+      <tbody>
+        <tr><td><b data-i18n="pk1">3D invitation or card</b></td><td>1,500 EGP</td><td>-</td><td data-i18n="pk1i">3D scene, map, countdown, RSVP list</td></tr>
+        <tr><td><b data-i18n="pk2">Essential site</b></td><td>4,500 EGP</td><td>400 EGP</td><td data-i18n="pk2i">One page, WhatsApp booking, domain for a year</td></tr>
+        <tr><td><b data-i18n="pk3">Signature 3D site</b><small data-i18n="pk3s">Launch price, first 5 clients</small></td><td>9,900 EGP</td><td>400 EGP</td><td data-i18n="pk3i">Custom 3D scene, treatment or service pages, Arabic SEO</td></tr>
+        <tr><td><b data-i18n="pk4">Booking site</b></td><td>12,000 EGP</td><td>600 EGP</td><td data-i18n="pk4i">Staff schedules, reminders, owner view, heatmap report</td></tr>
+        <tr><td><b data-i18n="pk5">Product launch</b></td><td>15,000 EGP</td><td>-</td><td data-i18n="pk5i">Flagship 3D product page</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note" data-i18n="pz.n">Gulf and Europe pricing on request.</p>
+
+  <div class="calc" id="calc">
+    <div class="cpanel">
+      <div class="cgroup"><div class="lab" data-i18n="cl.pk">Package</div><div class="chips" id="cPkg">
+        <button type="button" data-v="invite" data-i18n="pk1">3D invitation or card</button><button type="button" data-v="essential" data-i18n="pk2">Essential site</button><button type="button" data-v="signature" aria-pressed="true" data-i18n="pk3">Signature 3D site</button><button type="button" data-v="booking" data-i18n="pk4">Booking site</button><button type="button" data-v="product" data-i18n="pk5">Product launch</button>
+      </div></div>
+      <div class="cgroup" id="gPages"><div class="lab" data-i18n="cl.pg">Extra pages</div><div class="stepper"><button type="button" id="pMinus" aria-label="-">−</button><b id="pN">0</b><button type="button" id="pPlus" aria-label="+">+</button><small class="mono" data-i18n="cl.pgn">1,200 EGP each</small></div></div>
+      <div class="cgroup"><div class="lab" data-i18n="cl.ad">Add-ons</div><div class="toggles" id="cAdd">
+        <button type="button" data-v="booking" data-p="2500" aria-pressed="false"><span><i>✓</i><span data-i18n="ad1">Booking system with staff schedules</span></span><small>+2,500</small></button>
+        <button type="button" data-v="deposit" data-p="1500" aria-pressed="false"><span><i>✓</i><span data-i18n="ad2">Deposits and online payment</span></span><small>+1,500</small></button>
+        <button type="button" data-v="seo" data-p="1000" aria-pressed="false"><span><i>✓</i><span data-i18n="ad3">Arabic Google SEO</span></span><small>+1,000</small></button>
+        <button type="button" data-v="copy" data-p="800" aria-pressed="false"><span><i>✓</i><span data-i18n="ad4">Copywriting in Arabic and English</span></span><small>+800</small></button>
+        <button type="button" data-v="rush" data-p="0" aria-pressed="false"><span><i>✓</i><span data-i18n="ad5">Rush delivery, half the time</span></span><small>+30%</small></button>
+      </div></div>
+    </div>
+    <aside class="quote">
+      <div class="mono" data-i18n="cl.q">Your estimate</div>
+      <div class="tot"><span id="qTot">0</span><small data-i18n="egp">EGP</small></div>
+      <div class="mono" id="qMon"></div>
+      <div class="qrows"><div><span data-i18n="cl.r1">Deposit to start (50%)</span><b id="qDep"></b></div><div><span data-i18n="cl.r2">At launch (50%)</span><b id="qRest"></b></div><div><span data-i18n="cl.r3">Ready in</span><b id="qDays"></b></div></div>
+      <a class="btn" id="qSend" target="_blank" rel="noopener"><span data-i18n="cl.send">Send this estimate on WhatsApp</span></a>
+      <p class="fine" data-i18n="cl.fine">An estimate, not an invoice. We confirm the final price after your free preview.</p>
+    </aside>
+  </div>
+</section>
+
+<section class="blk wrap" id="faq">
+  <div class="head"><div><div class="mono" data-i18n="fq.k">[ FAQ ]</div><h2 data-i18n="fq.h">Questions owners ask us.</h2></div><p data-i18n="fq.p">Still unsure? Message us on WhatsApp and a real person answers.</p></div>
+  <div class="faq">
+    <details><summary data-i18n="q1">Do I own the website?</summary><p data-i18n="q1a">Yes. The domain is registered in your name and you get the full code. You can move it anywhere, any time.</p></details>
+    <details><summary data-i18n="q2">What does the monthly fee cover?</summary><p data-i18n="q2a">Hosting, security certificate, small text and price edits, the booking system and a monthly report. Cancel with 30 days notice and we hand everything over.</p></details>
+    <details><summary data-i18n="q3">How does the free preview work?</summary><p data-i18n="q3a">Send us your Instagram and services. Within 24 hours you get a link to a first version built for your business. You pay nothing unless you go ahead.</p></details>
+    <details><summary data-i18n="q4">Will the 3D work on older phones?</summary><p data-i18n="q4a">Yes. Older phones and slow connections get a lighter version of the scene automatically, and booking always works.</p></details>
+    <details><summary data-i18n="q5">How do bookings reach me?</summary><p data-i18n="q5a">As a WhatsApp message with the service, time and client name. Booking sites also get an owner page with the day's schedule.</p></details>
+    <details><summary data-i18n="q6">How many changes can I ask for?</summary><p data-i18n="q6a">Two rounds of revisions before launch are included. After launch, small text and price edits are part of the monthly plan.</p></details>
+    <details><summary data-i18n="q7">How do I pay?</summary><p data-i18n="q7a">InstaPay or bank transfer: 50% to start and 50% at launch. Gulf and Europe clients pay by international bank transfer.</p></details>
+    <details><summary data-i18n="q8">Is everything in Arabic and English?</summary><p data-i18n="q8a">Yes. Every site comes in both, with proper right-to-left layout and Egyptian or Gulf Arabic copy.</p></details>
+  </div>
+</section>
+
+<section class="blk wrap" id="preview">
+  <div class="head"><div><div class="mono" data-i18n="fp.k">[ Free preview ]</div><h2 data-i18n="fp.h">Get your preview in 24 hours.</h2></div><p data-i18n="fp.p">Three quick steps. We build a first version of your website for free and send it to you on WhatsApp.</p></div>
+  <div class="pform">
+    <div class="pbar"><i class="on"></i><i></i><i></i></div>
+    <div class="pstep on"><h3 data-i18n="fp.s1">What kind of business?</h3><div class="chips" id="fSector"><button type="button" data-v="barber" data-i18n="fs1">Barbershop</button><button type="button" data-v="salon" data-i18n="fs2">Women's salon</button><button type="button" data-v="clinic" data-i18n="fs3">Clinic</button><button type="button" data-v="event" data-i18n="fs4">Wedding or event</button><button type="button" data-v="product" data-i18n="fs5">Product brand</button><button type="button" data-v="other" data-i18n="fs6">Something else</button></div></div>
+    <div class="pstep"><h3 data-i18n="fp.s2">Tell us about it.</h3><div class="fields">
+      <label class="full"><span data-i18n="fp.f1">Business name</span><input id="fName" autocomplete="organization"></label>
+      <label><span data-i18n="fp.f2">Instagram or website</span><input id="fIg" placeholder="@yourbusiness"></label>
+      <label><span data-i18n="fp.f3">City or area</span><input id="fCity"></label></div></div>
+    <div class="pstep"><h3 data-i18n="fp.s3">How should we reach you?</h3><div class="fields">
+      <label><span data-i18n="fp.f4">Your name</span><input id="fYou" autocomplete="name"></label>
+      <label><span data-i18n="fp.f5">Best time to talk</span><select id="fTime"><option value="m" data-i18n="fp.t1">Morning</option><option value="a" data-i18n="fp.t2">Afternoon</option><option value="e" data-i18n="fp.t3">Evening</option></select></label>
+      <label class="full"><span data-i18n="fp.f6">Anything we should know? (optional)</span><input id="fNote"></label></div></div>
+    <p class="perr" id="fErr" aria-live="polite"></p>
+    <div class="pnav"><button type="button" class="btn" id="fBack" disabled><span data-i18n="fp.back">Back</span></button><button type="button" class="btn solid" id="fNext"><span id="fNextT">Next</span></button><a class="btn solid" id="fGo" href="#" target="_blank" rel="noopener" hidden><span id="fGoT">Send on WhatsApp</span></a></div>
+    <p class="pnote" data-i18n="fp.note">Your request opens WhatsApp with your details filled in. Nothing is sent until you press send.</p>
+  </div>
+</section>
+
+
+<section class="cta wrap">
+  <div class="mono" data-i18n="cta.k">[ Now booking November ]</div>
+  <h2 data-i18n-html="cta.h">Let's put your business <em style="font-style:normal;color:var(--accent)">in 3D.</em></h2>
+  <p data-i18n="cta.p">Message us and get a free preview made for your business.</p>
+  <a class="btn solid" href="https://wa.me/?text=Hi%20Scrollar%2C%20send%20me%20a%20free%20preview" target="_blank" rel="noopener"><span data-i18n="cta.b">Free preview on WhatsApp</span></a>
+  <div class="cnum"></div>
+</section>
+
+<footer class="wrap">
+  <span class="logo" style="font-size:17px"><svg viewBox="0 0 24 34" aria-hidden="true" style="width:18px;height:26px"><rect x="1.5" y="1.5" width="21" height="31" rx="10.5" fill="none" stroke="#f5f5f7" stroke-width="2.5"/><rect x="7.5" y="6.5" width="9" height="12" rx="4.5" fill="#c6ff3d"/><circle cx="12" cy="26" r="1.6" fill="#8a8f98"/></svg><span data-i18n="brand">Scrollar</span></span>
+  <div class="legal"><a href="privacy/" data-link="privacy" data-i18n="lg.p">Privacy</a><a href="terms/" data-link="terms" data-i18n="lg.t">Terms</a></div>
+  <span class="mono" data-i18n="foot">Cairo, Egypt / 2026</span>
+</footer>
+
+<script>
+// Portfolio images are injected at build time (window.__IMG) or loaded from img/
+(function(){
+  const imgs = window.__IMG || {};
+  document.querySelectorAll('img[data-src]').forEach(i => { const k = i.dataset.src; i.src = imgs[k] || ('img/' + k + '.webp'); });
+  // portfolio tiles play a real desktop recording of each site while on screen
+  const clipIO = new IntersectionObserver(es => es.forEach(e => { const v = e.target;
+    if (e.isIntersecting) { if (!v.src) { v.src = (window.__CLIPS || {})[v.dataset.clip] || ('img/clips/' + v.dataset.clip + '.mp4'); v.addEventListener('playing', () => v.classList.add('on'), { once: true }); } v.play().catch(() => {}); }
+    else v.pause(); }), { rootMargin: '200px 0px' });
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.querySelectorAll('video[data-clip]').forEach(v => clipIO.observe(v));
+  if (window.__DENTAL_URL) { const a = document.getElementById('dentalLink'); a.href = window.__DENTAL_URL; a.target = '_blank'; }
+  if (window.__LINKS) document.querySelectorAll('a[data-link]').forEach(a => { const u = window.__LINKS[a.dataset.link]; if (u) { a.href = u; a.target = '_blank'; a.rel = 'noopener'; } });
+
+  const AR = {
+    "g1.h":"لو المعاينة معجبتكش، متدفعش حاجة","g1.p":"المعاينة مجانية. بتدفع أول 50% بس لما تقرر تكمل.",
+    "g2.h":"جولتين تعديل متضمنين","g2.p":"غيّر الكلام والألوان والمشاهد مرتين قبل الإطلاق من غير أي تكلفة زيادة.",
+    "g3.h":"ملكك بالكامل","g3.p":"الدومين والكود وبيانات عملائك ملكك. من غير ما تبقى مربوط بينا ومن غير رسوم منصات.",
+    "cl.pk":"الباقة","cl.pg":"صفحات إضافية","cl.pgn":"1,200 جنيه للصفحة","cl.ad":"إضافات",
+    "ad1":"نظام حجز بجداول الفريق","ad2":"عربون ودفع أونلاين","ad3":"ظهور على جوجل بالعربي","ad4":"كتابة المحتوى بالعربي والإنجليزي","ad5":"تسليم مستعجل، في نص الوقت",
+    "cl.q":"التقدير بتاعك","egp":"جنيه","cl.r1":"عربون البداية (50%)","cl.r2":"عند الإطلاق (50%)","cl.r3":"جاهز خلال","cl.send":"ابعت التقدير ده على واتساب","cl.fine":"ده تقدير مش فاتورة. بنأكد السعر النهائي بعد المعاينة المجانية.",
+    "fq.k":"[ أسئلة شائعة ]","fq.h":"أسئلة أصحاب البيزنس بيسألوها.","fq.p":"لسه مش متأكد؟ ابعتلنا على واتساب وهيرد عليك شخص حقيقي.",
+    "q1":"هل الموقع ملكي؟","q1a":"أيوه. الدومين بيتسجل باسمك وبتاخد الكود كامل. تقدر تنقله في أي مكان وفي أي وقت.",
+    "q2":"الاشتراك الشهري بيغطي إيه؟","q2a":"الاستضافة وشهادة الأمان وتعديلات بسيطة في الكلام والأسعار ونظام الحجز وتقرير شهري. تقدر تلغي بإشعار 30 يوم ونسلمك كل حاجة.",
+    "q3":"المعاينة المجانية بتمشي إزاي؟","q3a":"ابعتلنا الانستجرام والخدمات. خلال 24 ساعة يوصلك لينك لنسخة أولى معمولة للبيزنس بتاعك. مش هتدفع حاجة غير لو قررت تكمل.",
+    "q4":"الـ3D هيشتغل على الموبايلات القديمة؟","q4a":"أيوه. الموبايلات القديمة والنت البطيء بيشوفوا نسخة أخف من المشهد تلقائياً، والحجز شغال دايماً.",
+    "q5":"الحجوزات بتوصلني إزاي؟","q5a":"كرسالة واتساب فيها الخدمة والميعاد واسم العميل. مواقع الحجز كمان ليها صفحة لصاحب المكان فيها جدول اليوم.",
+    "q6":"أقدر أطلب كام تعديل؟","q6a":"جولتين تعديل قبل الإطلاق متضمنين. بعد الإطلاق، التعديلات البسيطة في الكلام والأسعار جزء من الاشتراك الشهري.",
+    "q7":"بدفع إزاي؟","q7a":"إنستاباي أو تحويل بنكي: 50% في البداية و50% عند الإطلاق. عملاء الخليج وأوروبا بيدفعوا بتحويل بنكي دولي.",
+    "q8":"كل حاجة بالعربي والإنجليزي؟","q8a":"أيوه. كل موقع بيتعمل باللغتين، باتجاه من اليمين للشمال مظبوط وكلام مصري أو خليجي.",
+    "fp.k":"[ معاينة مجانية ]","fp.h":"خد معاينتك خلال 24 ساعة.","fp.p":"تلات خطوات سريعة. بنعمل نسخة أولى من موقعك مجاناً ونبعتهالك على واتساب.",
+    "fp.s1":"البيزنس بتاعك إيه؟","fs1":"باربر شوب","fs2":"صالون حريمي","fs3":"عيادة","fs4":"فرح أو مناسبة","fs5":"براند منتجات","fs6":"حاجة تانية",
+    "fp.s2":"احكيلنا عنه.","fp.f1":"اسم البيزنس","fp.f2":"الانستجرام أو الموقع","fp.f3":"المدينة أو المنطقة",
+    "fp.s3":"نكلمك إزاي؟","fp.f4":"اسمك","fp.f5":"أحسن وقت نكلمك فيه","fp.t1":"الصبح","fp.t2":"بعد الضهر","fp.t3":"بالليل","fp.f6":"حاجة عايزنا نعرفها؟ (اختياري)",
+    "fp.back":"رجوع","fp.note":"طلبك بيفتح واتساب ببياناتك جاهزة. مفيش حاجة بتتبعت غير لما تدوس إرسال.",
+    "lg.p":"الخصوصية","lg.t":"الشروط",
+        "n.k":"[ سكرولار بالأرقام ]","n.h":"سريع في التنفيذ. معمول للحجز.","n.p":"اللي بييجي مع كل موقع من سكرولار، من أول رسالة لأول حجز.",
+    "n1.u":"أيام","n1.h":"من أول رسالة لحد ما يبقى أونلاين","n1.p":"معاينة في اليوم الأول، المشهد الـ 3D بتاعك في اليوم الخامس، ودومينك الخاص في اليوم السابع.","n1.a":"اليوم ١","n1.b":"أونلاين",
+    "n2.u":"ساعة","n2.h":"معاينة مجانية معمولة ليك","n2.p":"متعملة باسمك وخدماتك وتقييماتك الحقيقية. من غير دفع ومن غير التزام.",
+    "n3.u":"ضغطة","n3.h":"من أي مشهد لواتساب","n3.p":"كل زيارة بتخلص عند زرار واحد. الحجز بيوصلك على واتساب، من غير أي أبلكيشن.","n3.e":"حجز جديد · ٨:٣٠ م",
+    "n4.u":"لغة","n4.h":"عربي وإنجليزي","n4.p":"من اليمين للشمال مظبوط، وكلام مصري أو خليجي بيبان إنه من هنا.",
+    "n5.u":"تصميم شغّال","n5.h":"خمس قطاعات، محرك واحد","n5.p":"عيادات وحلاقين وصالونات وفعاليات ومنتجات، لكل واحد مشهد 3D خاص بيه.",
+    "n6.h":"عشان نبدأ، والباقي عند التسليم","n6.p":"ادفع النص عشان نبدأ والنص لما الموقع يشتغل. الدومين والكود ملكك.","n6.a":"البداية","n6.b":"التسليم",
+        "brand":"سكرولار",
+    "nav.sectors":"القطاعات","nav.work":"أعمالنا","nav.pricing":"الأسعار","nav.cta":"كلمنا",
+    "hero.eyebrow":"[ <b>استوديو مواقع ثلاثية الأبعاد</b> / القاهرة ]",
+    "hero.h1":"مواقع العميل <em>يتفرج عليها</em>، مش يعدّي عليها.",
+    "hero.p":"سكرولار بيبني مواقع ثلاثية الأبعاد وأنظمة حجز للعيادات والحلاقين والصالونات والمناسبات والبراندات. كل زيارة بتنتهي بزرار واحد: احجز على واتساب.",
+    "hero.cta1":"شوف أعمالنا","hero.cta2":"معاينة مجانية في 24 ساعة",
+    "spec.1v":"5 قطاعات","spec.1k":"استوديو واحد","spec.2v":"7 أيام","spec.2k":"للإطلاق","spec.3v":"لغتين","spec.3k":"عربي وإنجليزي",
+    "c1.k":"العيادات","c1.h":"وريه العلاج قبل ما يقعد على الكرسي.","c1.p":"زراعة وفينير وتقويم شفاف متشرحين بالـ3D، فالمريض يوصل فاهم وجاهز يحجز.","c1.t1":"أسنان","c1.t2":"جلدية","c1.t3":"علاج طبيعي",
+    "c2.k":"الحلاقين والصالونات","c2.h":"كرسي مليان من غير ما التليفون يرن.","c2.p":"العميل يختار الخدمة والحلاق أو الستايلست والميعاد، وانت توصلك كل الحجوزات على واتساب.","c2.t1":"حلاقين","c2.t2":"صالونات حريمي","c2.t3":"أظافر ورموش",
+    "c3.k":"المناسبات","c3.h":"دعوات الضيوف بيفتحوها فعلاً.","c3.p":"دعوات فرح وكروت عيد ميلاد ثلاثية الأبعاد فيها خريطة المكان وعدّاد تنازلي وتأكيد الحضور في لينك واحد.","c3.t1":"أفراح","c3.t2":"خطوبة","c3.t3":"أعياد ميلاد",
+    "c4.k":"المنتجات","c4.h":"اطلق منتجك كأنه فلاجشيب.","c4.p":"صفحات منتجات بستايل أبل للبراندات المحلية: برفانات، سكين كير، قهوة، إلكترونيات.","c4.t1":"براندات","c4.t2":"إطلاقات","c4.t3":"بروفايل شركات",
+    "c5.k":"نظام الحجز","c5.h":"مواعيد بتمشي لوحدها.","c5.p":"جداول للفريق، تذكيرات، وتقرير شهري بخريطة حرارية بيوريك العملاء بيدوسوا فين وبيحجزوا إيه.","c5.t1":"جداول","c5.t2":"تذكيرات","c5.t3":"خرائط حرارية",
+    "end.k":"[ استوديو واحد ]","end.h":"البيزنس بتاعك، <em>بالـ3D.</em>",
+    "sec.k":"[ القطاعات ]","sec.h":"محرّك واحد. خمس صناعات.","sec.p":"كل قطاع له مشهد 3D ومحتوى ونظام حجز جاهزين بالعربي والإنجليزي، علشان كده بنسلّم في أيام.",
+    "s1.p":"قصة العلاج بالـ3D، صفحات للعلاجات، حجز على واتساب.","s1.f":"من 9,900 جنيه",
+    "s2.p":"حجز بجداول الفريق ومواعيد وعربون وتذكيرات.","s2.f":"من 12,000 جنيه",
+    "s3.p":"دعوات وكروت 3D بخريطة وعدّاد وتأكيد حضور.","s3.f":"من 1,500 جنيه",
+    "s4.p":"صفحات منتجات 3D وبروفايل شركات.","s4.f":"من 15,000 جنيه",
+    "s5.p":"أضف الجداول والتقارير لأي موقع من سكرولار.","s5.f":"من 600 جنيه / شهرياً",
+    "work.k":"[ أعمالنا ]","work.h":"تصميمات مبدئية حسب القطاع.","work.p":"دي تصميمات من الاستوديو لبيزنس متخيّلة، معمولة علشان توضّح كل قطاع بياخد إيه. شغل العملاء الحقيقي هيحل محلها مع كل إطلاق.",
+    "f.all":"الكل","st.live":"تصميم شغّال","st.prod":"قيد التنفيذ","st.open":"افتح التصميم",
+    "p1.m":"زراعة أسنان / القاهرة","p1.p":"زرعة بتتركّب لوحدها وانت بتعمل سكرول.",
+    "p2.m":"عيادة فينير / دبي","p2.p":"الفينير بيظهر قشرة قشرة، بالخليجي أولاً.",
+    "p3.m":"باربر شوب / القاهرة","p3.p":"اختار الحلاق والقصّة والميعاد في كام ضغطة.",
+    "p4.m":"صالون حريمي / القاهرة الجديدة","p4.p":"لون سايل لامع بيصب درجة جديدة في كل جزء: بلاش وكراميل وكرز. حجز للسيدات فقط.",
+    "p5.m":"صالون رجالي / الرياض","p5.p":"خيط دخان عود بيكتب خط عربي وانت بتنزل. حجز بعربون.",
+    "p8.m":"طلب جواز / لينك خاص","p8.p":"ست ذكريات بتتحول لنجوم وتتوصل في خاتم، وبعدين السؤال. وزرار \"لأ\" بيهرب.","p6.m":"دعوة فرح / القاهرة","p6.p":"شرارة نور بتكتب الأسامي وانت بتنزل. عد تنازلي وخريطة وتأكيد حضور على واتساب في لينك واحد.",
+    "p11.m":"عيادة أسنان / القاهرة الجديدة","p11.p":"ضرس حقيقي ممسوح بيعدّي على سكان ضوئي ويتحول لأشعة، وبعدين المينا والعاج والعصب بينوّروا واحد ورا التاني، وكل طبقة بعلاجها.","p12.m":"عيادة أسنان عائلية / مصر الجديدة","p12.p":"من غير 3D، ناس بس: يوم حقيقي في العيادة بيعدّي قدامك كشريط فيلم والساعة بتجري من 9 الصبح لـ 8 بالليل، وبعدين أسعار واضحة وحجز أول زيارة.","p10.m":"أتيليه حلاقة / الزمالك","p10.p":"فيديو سينمائي لمحل حلاقة مع تايبوجرافي تحريري: الفيديو بيصغر جوه برواز وانت نازل، والأسعار بتشتغل لما تقف عليها. والحجز في أربع ضغطات.","st.flag":"المشروع الأهم","p9.m":"فعالية رياضية / دهب","p9.p":"درون بتتابع كايت سيرفر في البلو لاجون. كل لفة فصل جديد، وبعدها التذاكر وتسجيل المتسابقين على واتساب.","p7.m":"إطلاق منتج / القاهرة","p7.p":"قرص بيت ذكي بيصحى، وبعدين بيتفتح لكل قطعة فيه: المسامير والشريحة والبطارية.",
+    "pr.k":"[ الخطوات ]","pr.h":"من رسالة لموقع شغّال في أسبوع.","pr.p":"ابعتلنا الانستجرام وفويس نوت، ونبعتلك معاينة مجانية معمولة مخصوص للبيزنس بتاعك خلال 24 ساعة.",
+    "pr.1k":"اليوم 1","pr.1h":"معاينة مجانية","pr.1p":"نسخة أولى باسمك وخدماتك وتقييماتك الحقيقية.",
+    "pr.2k":"اليوم 2 لـ 5","pr.2h":"مشهدك الـ3D","pr.2p":"المشهد ونظام الحجز والمحتوى، بنظبطهم مع ملاحظاتك.",
+    "pr.3k":"اليوم 6 لـ 7","pr.3h":"الإطلاق","pr.3p":"على دومين باسمك، مربوط بخرائط جوجل، مع تقرير شهري.",
+    "pz.k":"[ الأسعار ]","pz.h":"أسعار واضحة. النص في الأول.","pz.p":"50% في البداية و50% عند الإطلاق، بإنستاباي أو تحويل بنكي. الدومين والكود ملكك.",
+    "pz.c1":"الباقة","pz.c2":"مرة واحدة","pz.c3":"شهرياً","pz.c4":"بتشمل",
+    "pk1":"دعوة أو كارت 3D","pk1i":"مشهد 3D، خريطة، عدّاد، قائمة تأكيد الحضور",
+    "pk2":"موقع أساسي","pk2i":"صفحة واحدة، حجز على واتساب، دومين لسنة",
+    "pk3":"موقع 3D مميّز","pk3s":"سعر الإطلاق، لأول 5 عملاء","pk3i":"مشهد 3D مخصص، صفحات للخدمات، SEO بالعربي",
+    "pk4":"موقع حجز","pk4i":"جداول للفريق، تذكيرات، لوحة للمالك، تقرير خريطة حرارية",
+    "pk5":"إطلاق منتج","pk5i":"صفحة منتج 3D فلاجشيب",
+    "pz.n":"أسعار الخليج وأوروبا عند الطلب.",
+    "cta.k":"[ بنحجز مشاريع نوفمبر ]","cta.h":"يلا نخلي البيزنس بتاعك <em style=\"font-style:normal;color:var(--accent)\">بالـ3D.</em>","cta.p":"ابعتلنا واخد معاينة مجانية معمولة للبيزنس بتاعك.","cta.b":"معاينة مجانية على واتساب",
+    "foot":"القاهرة، مصر / 2026"
+  };
+  const EN = {};
+  document.querySelectorAll('[data-i18n]').forEach(e => { EN[e.dataset.i18n] = e.textContent; });
+  document.querySelectorAll('[data-i18n-html]').forEach(e => { EN[e.dataset.i18nHtml] = e.innerHTML; });
+  const btn = document.getElementById('lang');
+  function apply(lang) {
+    const d = lang === 'ar' ? AR : EN;
+    document.documentElement.lang = lang; document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    document.querySelectorAll('[data-i18n]').forEach(e => { const v = d[e.dataset.i18n]; if (v != null) e.textContent = v; });
+    document.querySelectorAll('[data-i18n-html]').forEach(e => { const v = d[e.dataset.i18nHtml]; if (v != null) e.innerHTML = v; });
+    btn.textContent = lang === 'ar' ? 'English' : 'عربي';
+    try { localStorage.setItem('scrollar-lang', lang); } catch (e) {}
+  }
+  let start = 'en';
+  try { start = localStorage.getItem('scrollar-lang') || ((navigator.language || '').startsWith('ar') ? 'ar' : 'en'); } catch (e) {}
+  const q = location.hash === '#ar' ? 'ar' : location.hash === '#en' ? 'en' : null;
+  apply(q || start);
+  btn.addEventListener('click', () => apply(document.documentElement.lang === 'ar' ? 'en' : 'ar'));
+
+  // portfolio filter
+  document.querySelectorAll('.filters button').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('.filters button').forEach(x => x.setAttribute('aria-pressed', x === b));
+    document.querySelectorAll('#grid .tile').forEach(t => { t.hidden = !(b.dataset.f === 'all' || t.dataset.s === b.dataset.f); });
+  }));
+})();
+</script>
+<script type="importmap">
+{"imports":{"three":"./vendor/three.module.js","three/addons/":"./vendor/addons/"}}
+</script>
+<script type="module" src="scene.js"></script>
+<script>
+// Scrollar in numbers: count up and animate each card once it scrolls into view
+(function () {
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const ease = t => t >= 1 ? 1 : 1 - Math.pow(2, -10 * t);
+  function count(el, delay) {
+    const to = +el.dataset.count, dur = 1600;
+    if (still) { el.textContent = to; return; }
+    setTimeout(() => { const t0 = performance.now(); (function f(now) { const k = Math.min(1, (now - t0) / dur); el.textContent = Math.round(to * ease(k)); if (k < 1) requestAnimationFrame(f); })(t0); }, delay);
+  }
+  const extras = {
+    segs: () => document.querySelectorAll('#segs i').forEach((i, k) => setTimeout(() => i.classList.add('on'), still ? 0 : 200 + k * 190)),
+    clock: () => { const c = document.getElementById('clockFg'); c.style.transition = still ? 'none' : 'stroke-dashoffset 1.8s cubic-bezier(.2,.8,.2,1)'; requestAnimationFrame(() => c.style.strokeDashoffset = 0); },
+    flip: () => { const f = document.getElementById('flip'); if (!still) setInterval(() => f.classList.toggle('alt'), 1800); },
+    dots: () => document.querySelectorAll('#dots i').forEach((i, k) => setTimeout(() => i.classList.add('on'), still ? 0 : 250 + k * 130)),
+    half: () => setTimeout(() => document.getElementById('half').style.width = '50%', still ? 0 : 300),
+  };
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting) return; io.unobserve(e.target);
+    const cards = [...document.querySelectorAll('.nums .num')];
+    cards.forEach((c, k) => { setTimeout(() => c.classList.add('in'), k * 110); count(c.querySelector('[data-count]'), k * 110); });
+    Object.values(extras).forEach(fn => fn());
+  }), { threshold: 0.25 });
+  io.observe(document.querySelector('.nums'));
+})();
+</script>
+<script>
+// Price calculator, free preview form and their WhatsApp links. Language follows <html lang>.
+(function () {
+  const WA = '';                       // swap for the Scrollar business number
+  const L = () => document.documentElement.lang === 'ar' ? 'ar' : 'en';
+  const T = {
+    en: { egp: 'EGP', mo: m => `+ ${m} EGP / month`, nomo: 'No monthly fee', days: d => `${d} days`, next: 'Next', send: 'Send on WhatsApp',
+      e1: 'Pick your business type.', e2: 'Add your business name.', e3: 'Add your name.',
+      pk: { invite: '3D invitation or card', essential: 'Essential site', signature: 'Signature 3D site', booking: 'Booking site', product: 'Product launch' },
+      ad: { booking: 'Booking system', deposit: 'Deposits and online payment', seo: 'Arabic SEO', copy: 'Copywriting', rush: 'Rush delivery' },
+      sec: { barber: 'Barbershop', salon: "Women's salon", clinic: 'Clinic', event: 'Wedding or event', product: 'Product brand', other: 'Other' },
+      time: { m: 'Morning', a: 'Afternoon', e: 'Evening' }, incl: 'included' },
+    ar: { egp: 'جنيه', mo: m => `+ ${m} جنيه شهرياً`, nomo: 'من غير اشتراك شهري', days: d => `${d} أيام`, next: 'التالي', send: 'ابعت على واتساب',
+      e1: 'اختار نوع البيزنس.', e2: 'اكتب اسم البيزنس.', e3: 'اكتب اسمك.',
+      pk: { invite: 'دعوة أو كارت 3D', essential: 'موقع أساسي', signature: 'موقع 3D مميز', booking: 'موقع حجز', product: 'إطلاق منتج' },
+      ad: { booking: 'نظام حجز', deposit: 'عربون ودفع أونلاين', seo: 'ظهور على جوجل', copy: 'كتابة المحتوى', rush: 'تسليم مستعجل' },
+      sec: { barber: 'باربر شوب', salon: 'صالون حريمي', clinic: 'عيادة', event: 'فرح أو مناسبة', product: 'براند منتجات', other: 'حاجة تانية' },
+      time: { m: 'الصبح', a: 'بعد الضهر', e: 'بالليل' }, incl: 'متضمن' } };
+  const fmt = n => n.toLocaleString('en-US');
+  const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+
+  // ---------- calculator ----------
+  const PKG = { invite: { p: 1500, m: 0, d: 3 }, essential: { p: 4500, m: 400, d: 5 }, signature: { p: 9900, m: 400, d: 7 }, booking: { p: 12000, m: 600, d: 10 }, product: { p: 15000, m: 0, d: 10 } };
+  let pkg = 'signature', pages = 0; const on = new Set();
+  function allowed(v) {
+    if (pkg === 'invite') return v === 'copy' || v === 'rush';
+    if (v === 'booking') return pkg === 'essential' || pkg === 'signature';
+    if (v === 'deposit') return pkg === 'booking' || on.has('booking');
+    if (v === 'seo') return pkg !== 'signature';
+    return true;
+  }
+  function calc() {
+    const t = T[L()], P = PKG[pkg];
+    $$('#cPkg button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === pkg));
+    $('#gPages').style.opacity = pkg === 'invite' ? .35 : 1; if (pkg === 'invite') pages = 0; $('#pN').textContent = pages;
+    let price = P.p + pages * 1200, days = P.d + pages, mon = P.m;
+    $$('#cAdd button').forEach(b => {
+      const v = b.dataset.v, ok = allowed(v); if (!ok) on.delete(v);
+      b.disabled = !ok; b.style.opacity = ok ? 1 : .35; b.setAttribute('aria-pressed', on.has(v));
+      const sm = b.querySelector('small'); if (v === 'seo' && pkg === 'signature') sm.textContent = t.incl; else if (v === 'booking' && pkg === 'booking') sm.textContent = t.incl; else sm.textContent = v === 'rush' ? '+30%' : '+' + fmt(+b.dataset.p);
+    });
+    if (on.has('booking')) { price += 2500; days += 3; mon = 600; }
+    if (on.has('deposit')) { price += 1500; days += 1; }
+    if (on.has('seo')) { price += 1000; days += 1; }
+    if (on.has('copy')) { price += 800; days += 1; }
+    if (on.has('rush')) { price = Math.round(price * 1.3 / 50) * 50; days = Math.ceil(days / 2); }
+    $('#qTot').textContent = fmt(price); $('#qMon').textContent = mon ? t.mo(fmt(mon)) : t.nomo;
+    $('#qDep').textContent = fmt(Math.round(price / 2)) + ' ' + t.egp; $('#qRest').textContent = fmt(price - Math.round(price / 2)) + ' ' + t.egp; $('#qDays').textContent = t.days(days);
+    const adds = [...on].map(v => t.ad[v]).join(', ');
+    const msg = L() === 'ar'
+      ? `أهلاً سكرولار، عايز أبدأ:\nالباقة: ${t.pk[pkg]}\nصفحات إضافية: ${pages}\nإضافات: ${adds || 'من غير'}\nالتقدير: ${fmt(price)} جنيه${mon ? ` + ${mon} شهرياً` : ''}\nجاهز خلال: ${days} أيام`
+      : `Hi Scrollar, I'd like to start:\nPackage: ${t.pk[pkg]}\nExtra pages: ${pages}\nAdd-ons: ${adds || 'none'}\nEstimate: ${fmt(price)} EGP${mon ? ` + ${mon} EGP/month` : ''}\nReady in: ${days} days`;
+    $('#qSend').href = `https://wa.me/${WA}?text=${encodeURIComponent(msg)}`;
+  }
+  $$('#cPkg button').forEach(b => b.addEventListener('click', () => { pkg = b.dataset.v; calc(); }));
+  $$('#cAdd button').forEach(b => b.addEventListener('click', () => { const v = b.dataset.v; on.has(v) ? on.delete(v) : on.add(v); calc(); }));
+  $('#pPlus').addEventListener('click', () => { if (pkg !== 'invite') pages = Math.min(10, pages + 1); calc(); });
+  $('#pMinus').addEventListener('click', () => { pages = Math.max(0, pages - 1); calc(); });
+
+  // ---------- free preview form ----------
+  let step = 0, sector = '';
+  const steps = $$('.pstep'), bars = $$('.pbar i');
+  function show() {
+    steps.forEach((s, i) => s.classList.toggle('on', i === step)); bars.forEach((b, i) => b.classList.toggle('on', i <= step));
+    $('#fBack').disabled = step === 0; $('#fNextT').textContent = T[L()].next; $('#fGoT').textContent = T[L()].send; $('#fNext').hidden = step === 2; $('#fGo').hidden = step !== 2; $('#fErr').textContent = ''; link();
+    $$('#fSector button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === sector));
+  }
+  $$('#fSector button').forEach(b => b.addEventListener('click', () => { sector = b.dataset.v; show(); setTimeout(() => { step = 1; show(); $('#fName').focus(); }, 220); }));
+  $('#fBack').addEventListener('click', () => { step = Math.max(0, step - 1); show(); });
+  $('#fNext').addEventListener('click', () => {
+    const t = T[L()];
+    if (step === 0 && !sector) { $('#fErr').textContent = t.e1; return; }
+    if (step === 1 && !$('#fName').value.trim()) { $('#fErr').textContent = t.e2; $('#fName').focus(); return; }
+    if (step < 2) { step++; show(); return; }
+  });
+  // the last step is a real link (pop-ups opened from script are blocked in some browsers and in previews)
+  function link() {
+    if (step !== 2 || !sector) return;
+    const t = T[L()];
+    const v = id => $(id).value.trim();
+    const msg = L() === 'ar'
+      ? `أهلاً سكرولار، عايز معاينة مجانية:\nالنوع: ${t.sec[sector]}\nالبيزنس: ${v('#fName')}\nانستجرام/موقع: ${v('#fIg') || '-'}\nالمنطقة: ${v('#fCity') || '-'}\nالاسم: ${v('#fYou')}\nأحسن وقت: ${t.time[v('#fTime')]}${v('#fNote') ? `\nملاحظات: ${v('#fNote')}` : ''}`
+      : `Hi Scrollar, I'd like a free preview:\nType: ${t.sec[sector]}\nBusiness: ${v('#fName')}\nInstagram/website: ${v('#fIg') || '-'}\nArea: ${v('#fCity') || '-'}\nName: ${v('#fYou')}\nBest time: ${t.time[v('#fTime')]}${v('#fNote') ? `\nNotes: ${v('#fNote')}` : ''}`;
+    $('#fGo').href = `https://wa.me/${WA}?text=${encodeURIComponent(msg)}`;
+  }
+  ['#fName', '#fIg', '#fCity', '#fYou', '#fTime', '#fNote'].forEach(id => { const e = $(id); if (e) { e.addEventListener('input', link); e.addEventListener('change', link); } });
+  $('#fGo').addEventListener('click', e => { link(); if (!$('#fYou').value.trim()) { e.preventDefault(); $('#fErr').textContent = T[L()].e3; $('#fYou').focus(); } });
+  new MutationObserver(() => { calc(); show(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+  calc(); show();
+})();
+</script>
+</body>
+</html>

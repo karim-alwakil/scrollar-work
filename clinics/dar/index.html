@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dar Dental · A day at the clinic</title>
+<meta name="theme-color" content="#f7f4ee">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Manrope:wght@400;500;600;700&family=Alexandria:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f7f4ee;--paper:#fffdf9;--ink:#1d2320;--mute:#6b716c;--line:rgba(29,35,32,.12);--sage:#5f7f6b;--sage2:#dfe8e1;--peach:#f2d9c7;
+  --serif:'Fraunces',Georgia,serif;--sans:'Manrope',system-ui,sans-serif;--ar:'Alexandria',system-ui,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg)}
+html.lenis,html.lenis body{height:auto}.lenis.lenis-smooth{scroll-behavior:auto!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+html[lang=ar] body{font-family:var(--ar)}
+a{color:inherit;text-decoration:none}button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+em{font-family:var(--serif);font-style:italic;font-weight:300;color:var(--sage)}
+html[lang=ar] em{font-family:var(--ar);font-style:normal;font-weight:300}
+.k{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--sage)}
+html[lang=ar] .k{letter-spacing:0;font-size:14px}
+.pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:999px;padding:12px 20px;font-size:14px;font-weight:600;transition:.25s;background:transparent}
+.pill:hover{border-color:var(--ink)}
+.pill.solid{background:var(--ink);color:var(--paper);border-color:var(--ink)}.pill.solid:hover{background:var(--sage);border-color:var(--sage)}
+
+nav{position:fixed;inset:0 0 auto 0;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:18px clamp(16px,4vw,56px);transition:background .3s,backdrop-filter .3s}
+nav.solid{background:rgba(247,244,238,.82);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.logo{font-family:var(--serif);font-size:24px;font-weight:500;display:flex;align-items:center;gap:10px}
+.logo i{width:26px;height:26px;border-radius:50% 50% 46% 46%;background:var(--sage);display:inline-block;position:relative}
+.logo i:after{content:"";position:absolute;left:8px;top:7px;width:10px;height:10px;border-radius:50%;background:var(--bg)}
+.logo small{font-family:var(--ar);font-size:14px;color:var(--mute);font-weight:400}
+nav .links{display:flex;gap:28px;font-size:14px;font-weight:500;color:var(--mute)}nav .links a:hover{color:var(--ink)}
+nav .r{display:flex;gap:10px}
+@media (max-width:820px){nav .links{display:none}}@media (max-width:420px){nav .r .solid{display:none}}
+
+/* hero */
+.hero{padding:140px clamp(16px,4vw,56px) 0;max-width:1440px;margin:0 auto}
+.hero .top{display:grid;grid-template-columns:1.3fr .7fr;gap:40px;align-items:end;margin-bottom:44px}
+.hero h1{font-family:var(--serif);font-weight:300;font-size:clamp(48px,7vw,116px);line-height:.95;letter-spacing:-.025em}
+html[lang=ar] .hero h1{font-family:var(--ar);font-weight:400;line-height:1.2;letter-spacing:0}
+.hero h1 em{font-weight:300}
+.hero p{color:var(--mute);font-size:17px;line-height:1.6;margin-bottom:22px}
+.hero .ctas{display:flex;gap:10px;flex-wrap:wrap}
+.hv{position:relative;border-radius:28px;overflow:hidden;height:min(74vh,760px);transform-origin:50% 0;will-change:transform}
+.hv video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hv .chip{position:absolute;left:24px;bottom:24px;background:rgba(255,253,249,.92);backdrop-filter:blur(8px);border-radius:16px;padding:14px 18px;display:flex;gap:14px;align-items:center;font-size:14px}
+html[dir=rtl] .hv .chip{left:auto;right:24px}
+.hv .chip b{font-family:var(--serif);font-size:28px;font-weight:400}
+.dot{width:8px;height:8px;border-radius:50%;background:#3fb26b;box-shadow:0 0 0 4px rgba(63,178,107,.18)}
+@media (max-width:820px){.hero .top{grid-template-columns:1fr}.hv{height:56vh;border-radius:20px}}
+
+/* the day: horizontal film strip */
+#day{position:relative;height:640vh;margin-top:120px}
+#day .pin{position:sticky;top:0;height:100vh;overflow:hidden;display:flex;flex-direction:column;justify-content:center}
+.dayhead{position:absolute;top:96px;left:clamp(16px,4vw,56px);right:clamp(16px,4vw,56px);display:flex;justify-content:space-between;align-items:flex-start;z-index:3}
+.dayhead h2{font-family:var(--serif);font-weight:300;font-size:clamp(34px,4vw,60px);line-height:1;letter-spacing:-.02em}
+html[lang=ar] .dayhead h2{font-family:var(--ar);font-weight:400;line-height:1.3}
+.clock{font-family:var(--serif);font-size:clamp(40px,5vw,80px);font-weight:300;font-variant-numeric:tabular-nums;line-height:1;text-align:end}
+.clock small{display:block;font-family:var(--sans);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin-top:8px}
+html[lang=ar] .clock small{font-family:var(--ar);letter-spacing:0}
+.track{display:flex;gap:4vw;padding-inline:clamp(16px,4vw,56px);will-change:transform;margin-top:150px;align-items:center}
+.ch{flex:0 0 auto;width:min(58vw,880px,calc((100vh - 330px) * 1.7778));display:grid;grid-template-columns:1fr;gap:20px}
+.ch .v{position:relative;aspect-ratio:16/9;border-radius:22px;overflow:hidden;background:#ddd;transform-origin:50% 50%}
+.ch .v video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.ch .meta{display:grid;grid-template-columns:120px 1fr;gap:24px;align-items:start}
+.ch .t{font-family:var(--serif);font-size:30px;font-weight:300;color:var(--sage)}
+.ch h3{font-family:var(--serif);font-weight:400;font-size:clamp(24px,2.4vw,38px);line-height:1.1;letter-spacing:-.01em;margin-bottom:8px}
+html[lang=ar] .ch h3{font-family:var(--ar);line-height:1.4}
+.ch p{color:var(--mute);line-height:1.6;max-width:520px}
+.bar{position:absolute;left:clamp(16px,4vw,56px);right:clamp(16px,4vw,56px);bottom:40px;height:2px;background:var(--line);border-radius:2px}
+.bar i{position:absolute;inset:0 auto 0 0;background:var(--sage);width:0}
+html[dir=rtl] .bar i{inset:0 0 0 auto}
+@media (max-width:820px){.ch{width:84vw}.ch .meta{grid-template-columns:1fr;gap:6px}.dayhead{top:80px}}
+
+/* prices */
+section.blk{max-width:1440px;margin:0 auto;padding:140px clamp(16px,4vw,56px)}
+.sh{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;margin-bottom:50px;flex-wrap:wrap}
+.sh h2{font-family:var(--serif);font-weight:300;font-size:clamp(40px,5.4vw,84px);line-height:1;letter-spacing:-.02em}
+html[lang=ar] .sh h2{font-family:var(--ar);font-weight:400;line-height:1.25}
+.sh p{max-width:420px;color:var(--mute);line-height:1.6}
+.prices{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.pc{background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:28px;display:flex;flex-direction:column;gap:10px;min-height:210px}
+.pc h4{font-size:19px;font-weight:600}
+.pc p{color:var(--mute);font-size:14px;line-height:1.55;flex:1}
+.pc .pr{font-family:var(--serif);font-size:34px;font-weight:300}
+.pc .pr small{font-family:var(--sans);font-size:13px;color:var(--mute);margin-inline-start:6px}
+html[lang=ar] .pc .pr{font-family:var(--ar)}
+.pc.hl{background:var(--sage2);border-color:transparent}
+@media (max-width:900px){.prices{grid-template-columns:1fr 1fr}}@media (max-width:600px){.prices{grid-template-columns:1fr}}
+
+/* promises */
+.prom{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.pm{border-top:2px solid var(--ink);padding-top:18px}
+.pm b{display:block;font-family:var(--serif);font-weight:400;font-size:44px;line-height:1;margin-bottom:10px}
+html[lang=ar] .pm b{font-family:var(--ar)}
+.pm span{color:var(--mute);font-size:15px;line-height:1.5}
+@media (max-width:900px){.prom{grid-template-columns:1fr 1fr}}
+
+/* booking */
+.book{background:var(--ink);color:var(--paper);border-radius:32px;padding:clamp(28px,5vw,72px);display:grid;grid-template-columns:1fr 1fr;gap:50px}
+.book h2{font-family:var(--serif);font-weight:300;font-size:clamp(40px,5vw,76px);line-height:1;letter-spacing:-.02em;margin-bottom:18px}
+html[lang=ar] .book h2{font-family:var(--ar);font-weight:400;line-height:1.25}
+.book h2 em{color:var(--peach)}
+.book p{color:rgba(255,253,249,.65);line-height:1.6}
+.fld{margin-bottom:22px}
+.fld label{display:block;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,253,249,.55);margin-bottom:10px}
+html[lang=ar] .fld label{letter-spacing:0;font-size:13px}
+.ops{display:flex;flex-wrap:wrap;gap:8px}
+.op{border:1px solid rgba(255,253,249,.2);border-radius:999px;padding:10px 16px;font-size:14px;transition:.2s}
+.op:hover{border-color:var(--paper)}.op.on{background:var(--paper);color:var(--ink)}
+.book input{width:100%;background:transparent;border:0;border-bottom:1px solid rgba(255,253,249,.25);color:var(--paper);font:inherit;font-size:18px;padding:10px 0;outline:none}
+.book input:focus{border-color:var(--peach)}
+.book a.go{display:flex;justify-content:center;background:var(--peach);color:var(--ink);border-radius:999px;padding:16px;font-weight:700;margin-top:10px;transition:.2s}
+.book a.go.off{opacity:.35;pointer-events:none}
+.book .note{font-size:13px;margin-top:12px}
+@media (max-width:900px){.book{grid-template-columns:1fr}}
+
+footer{max-width:1440px;margin:0 auto;padding:60px clamp(16px,4vw,56px) 40px;display:grid;grid-template-columns:2fr 1fr 1fr;gap:30px;color:var(--mute);font-size:14px;line-height:1.7}
+footer b{color:var(--ink);display:block;margin-bottom:6px}
+footer .cr{grid-column:1/-1;border-top:1px solid var(--line);padding-top:24px;font-size:12px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+@media (max-width:760px){footer{grid-template-columns:1fr}}
+.rv{opacity:0;transform:translateY(24px);transition:opacity .9s ease,transform .9s cubic-bezier(.2,.7,.1,1)}
+.rv.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
+</style>
+</head>
+<body>
+<nav id="nav">
+  <a class="logo" href="#top"><i></i>Dar <small>دار</small></a>
+  <div class="links"><a href="#day" data-i18n="n1">A day here</a><a href="#prices" data-i18n="n2">Prices</a><a href="#book" data-i18n="n3">First visit</a></div>
+  <div class="r"><button class="pill" id="lang">عربي</button><a class="pill solid" href="#book" data-i18n="nb">Book a visit</a></div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="top">
+    <h1 data-i18n-html="h1">A dentist you'll actually <em>look forward to.</em></h1>
+    <div><p data-i18n="hp">Dar is a family dental clinic in Heliopolis. No waiting room marathons, no surprise bills, and a team that explains everything on screen before anything happens.</p>
+    <div class="ctas"><a class="pill solid" href="#book" data-i18n="hc1">Book your first visit</a><a class="pill" href="#day" data-i18n="hc2">Spend a day with us</a></div></div>
+  </div>
+  <div class="hv" id="hv"><video src="assets/33328.mp4" poster="assets/33328.jpg" muted loop playsinline autoplay preload="auto"></video>
+    <div class="chip"><span class="dot"></span><div><b data-i18n="hs">4 min</b><div data-i18n="hsl">average wait this week</div></div></div></div>
+</header>
+
+<section id="day">
+  <div class="pin">
+    <div class="dayhead"><div><span class="k" data-i18n="dk">A day at Dar</span><h2 data-i18n-html="dh">Scroll through <em>a real day.</em></h2></div><div class="clock" id="clock">09:00<small data-i18n="dcl">Heliopolis time</small></div></div>
+    <div class="track" id="track">
+      <article class="ch" data-t="09:00"><div class="v"><video src="assets/12145.mp4" poster="assets/12145.jpg" muted loop playsinline preload="metadata"></video></div><div class="meta"><span class="t">09:00</span><div><h3 data-i18n="c1h">Your chair is ready before you are.</h3><p data-i18n="c1p">Every room is set and sterilised for your appointment, not for the next walk-in. You sit down at your booked time.</p></div></div></article>
+      <article class="ch" data-t="09:15"><div class="v"><video src="assets/12140.mp4" poster="assets/12140.jpg" muted loop playsinline preload="metadata"></video></div><div class="meta"><span class="t">09:15</span><div><h3 data-i18n="c2h">We show you your X-ray first.</h3><p data-i18n="c2p">Before any tool comes near you, your dentist walks you through the image and what it means. In plain words.</p></div></div></article>
+      <article class="ch" data-t="09:40"><div class="v"><video src="assets/9027.mp4" poster="assets/9027.jpg" muted loop playsinline preload="metadata"></video></div><div class="meta"><span class="t">09:40</span><div><h3 data-i18n="c3h">You leave with a plan and a price.</h3><p data-i18n="c3p">A written plan on WhatsApp: what needs doing, what can wait, and exactly what each step costs.</p></div></div></article>
+      <article class="ch" data-t="11:30"><div class="v"><video src="assets/8975.mp4" poster="assets/8975.jpg" muted loop playsinline preload="metadata"></video></div><div class="meta"><span class="t">11:30</span><div><h3 data-i18n="c4h">Gentle hands, honest answers.</h3><p data-i18n="c4p">Nervous? Tell us. We go slower, explain each step, and stop whenever you raise a hand.</p></div></div></article>
+      <article class="ch" data-t="16:00"><div class="v"><video src="assets/4754.mp4" poster="assets/4754.jpg" muted loop playsinline preload="metadata"></video></div><div class="meta"><span class="t">16:00</span><div><h3 data-i18n="c5h">After school, the kids come in.</h3><p data-i18n="c5p">Short visits, small chairs, big explanations. Most of them ask when they can come back.</p></div></div></article>
+      <article class="ch" data-t="20:00"><div class="v"><video src="assets/4766.mp4" poster="assets/4766.jpg" muted loop playsinline preload="metadata"></video></div><div class="meta"><span class="t">20:00</span><div><h3 data-i18n="c6h">Six dentists. One family practice.</h3><p data-i18n="c6p">General care, kids, orthodontics and implants under one roof, so your family has one dentist for everything.</p></div></div></article>
+    </div>
+    <div class="bar"><i id="barI"></i></div>
+  </div>
+</section>
+
+<section class="blk" id="prices">
+  <div class="sh rv"><h2 data-i18n-html="ph">Prices on the wall, <em>not after the visit.</em></h2><p data-i18n="pp">Every price includes the consultation and an aftercare call. Instalments over 6 months on treatments above 5,000 EGP.</p></div>
+  <div class="prices rv" id="plist"></div>
+</section>
+
+<section class="blk" style="padding-top:0">
+  <div class="prom rv">
+    <div class="pm"><b>4 <span data-i18n="u1">min</span></b><span data-i18n="pr1">Average wait. We book fewer patients, on purpose.</span></div>
+    <div class="pm"><b>0</b><span data-i18n="pr2">Surprise charges. The price you approve is the price you pay.</span></div>
+    <div class="pm"><b>24<span data-i18n="u3">h</span></b><span data-i18n="pr3">A dentist answers your WhatsApp within a day after treatment.</span></div>
+    <div class="pm"><b>6</b><span data-i18n="pr4">Dentists, from kids to implants, in one clinic.</span></div>
+  </div>
+</section>
+
+<section class="blk" id="book">
+  <div class="book rv">
+    <div><span class="k" style="color:var(--peach)" data-i18n="bk">Your first visit</span><h2 data-i18n-html="bh">Start with <em>a check-up and a coffee.</em></h2><p data-i18n="bp">A first visit is 45 minutes: a full check-up, a digital X-ray, and your plan with prices. 600 EGP, or free if you start treatment within a month.</p></div>
+    <div>
+      <div class="fld"><label data-i18n="f1">Who is it for</label><div class="ops" id="oWho"></div></div>
+      <div class="fld"><label data-i18n="f2">What's going on</label><div class="ops" id="oWhy"></div></div>
+      <div class="fld"><label data-i18n="f3">When suits you</label><div class="ops" id="oWhen"></div></div>
+      <div class="fld"><label data-i18n="f4">Your name</label><input id="nm" autocomplete="name"></div>
+      <a class="go off" id="go" href="#" target="_blank" rel="noopener" data-i18n="fgo">Send on WhatsApp</a>
+      <p class="note" data-i18n="fn">We reply with the first free slots. Nothing is booked until you confirm.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div><a class="logo" href="#top" style="margin-bottom:10px"><i></i>Dar <small>دار</small></a><span data-i18n="fa">22 El Merghany Street, Heliopolis, Cairo</span></div>
+  <div><b data-i18n="fh">Hours</b><span data-i18n="fh1">Saturday to Thursday, 9:00 to 21:00</span></div>
+  <div><b data-i18n="fc">Contact</b><a href="#book" data-i18n="fc1">WhatsApp booking</a></div>
+  <div class="cr"><span data-i18n="fcr">Concept site for a fictional clinic, made by Scrollar. Footage: Mixkit (Mixkit License).</span><a id="back" href="../../index.html" data-i18n="fm">Concept by Scrollar</a></div>
+</footer>
+
+<script src="../../vendor/lenis.min.js"></script>
+<script type="module" src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Maison Noor</title>
+<meta name="description" content="Maison Noor, a women's salon concept in New Cairo by Scrollar: 3D story, stylist schedules and booking.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Italiana&family=Jost:wght@400;500;600&family=El+Messiri:wght@500;600&family=Alexandria:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../base.css">
+<style>
+:root{color-scheme:light;--bg:#f7eef0;--panel:#fffafb;--ink:#2a1622;--mut:#86697a;--accent:#a8436b;--accent-ink:#ffffff;--sel:rgba(168,67,107,.12);--line:rgba(42,22,34,.12);--display:'Italiana',Didot,serif;--display-w:400;--display-ls:.01em;--body:'Jost',Futura,sans-serif;--ar-display:'El Messiri',serif;--ar-body:'Alexandria',Tahoma,sans-serif;--radius:999px;--radius-sm:16px;--radius-lg:28px;--glow:radial-gradient(55% 60% at 68% 45%,rgba(168,67,107,.14),transparent 70%);}
+.hero h1{font-size:clamp(52px,7.6vw,118px)}#story{height:640vh}.glow{display:none}#stage{image-rendering:auto}@media(min-width:761px){.hero,.chapter{background:rgba(255,250,251,.62);-webkit-backdrop-filter:blur(18px) saturate(1.2);backdrop-filter:blur(18px) saturate(1.2);padding:32px 34px;border-radius:28px;box-shadow:0 30px 80px rgba(80,20,40,.18)}.chapter{max-width:440px;border-inline-start:0}.hero{max-width:560px}}@media(max-width:760px){.hero,.chapter{background:linear-gradient(rgba(247,238,240,0),rgba(247,238,240,.92) 22%)}}
+</style>
+</head>
+<body>
+<nav class="wrap"><a class="brand" id="brand" href="#">Maison Noor</a><div class="navr"><button class="chip" id="langBtn" type="button">عربي</button><a class="cta" id="navBook" href="#book">Book</a></div></nav>
+<div id="story"><div class="sticky"><div class="glow"></div><canvas id="stage" aria-label="3D scene"></canvas>
+  <div class="layer wrap" id="lHero" data-step="0,0.13"></div>
+  <div class="layer wrap" id="lC0" data-step="0.2,0.4"></div>
+  <div class="layer wrap" id="lC1" data-step="0.43,0.63"></div>
+  <div class="layer wrap" id="lC2" data-step="0.66,0.86"></div>
+  <div class="layer wrap" id="lEnd" data-step="0.9,1"></div>
+  <div class="track"><div id="progress"></div></div>
+</div></div>
+<section class="blk wrap" id="book"><div class="shead"><h2 id="bookH"></h2><p id="bookP"></p></div><div class="book"><div class="steps" id="steps"></div><aside class="summary" id="summary"></aside></div></section>
+<section class="blk wrap"><div class="shead"><h2 id="ownerH"></h2><p id="ownerP"></p></div><div class="owner" id="owner"></div></section>
+<footer class="wrap" id="foot"></footer>
+<script>window.CONCEPT = {"id": "maison-noor", "name": {"en": "Maison Noor", "ar": "ميزون نور"}, "city": {"en": "Women's salon / New Cairo", "ar": "صالون حريمي / القاهرة الجديدة"}, "staffWord": {"en": "stylist", "ar": "الستايلست"}, "currency": {"en": "EGP", "ar": "ج.م"}, "wa": "", "defaultLang": "en", "arLocale": "ar-EG", "hours": {"open": "11:00", "close": "21:00", "step": 30, "closed": [1]}, "services": [{"id": "blow", "name": {"en": "Blow-dry", "ar": "سشوار"}, "min": 45, "price": 450}, {"id": "cut", "name": {"en": "Cut and style", "ar": "قص وتصفيف"}, "min": 60, "price": 700}, {"id": "roots", "name": {"en": "Root color", "ar": "صبغة جذور"}, "min": 90, "price": 1500}, {"id": "gloss", "name": {"en": "Gloss treatment", "ar": "حمام كريم لامع"}, "min": 60, "price": 900}, {"id": "mani", "name": {"en": "Manicure", "ar": "مانيكير"}, "min": 45, "price": 350}, {"id": "gel", "name": {"en": "Gel nails", "ar": "أظافر جل"}, "min": 60, "price": 600}], "staff": [{"id": "nour", "name": {"en": "Nour", "ar": "نور"}, "role": {"en": "Hair", "ar": "شعر"}}, {"id": "salma", "name": {"en": "Salma", "ar": "سلمى"}, "role": {"en": "Color", "ar": "صبغة"}}, {"id": "mariam", "name": {"en": "Mariam", "ar": "مريم"}, "role": {"en": "Nails", "ar": "أظافر"}}], "clients": [{"en": "Hana", "ar": "هنا"}, {"en": "Yasmin", "ar": "ياسمين"}, {"en": "Farida", "ar": "فريدة"}, {"en": "Malak", "ar": "ملك"}, {"en": "Nada", "ar": "ندى"}, {"en": "Laila", "ar": "ليلى"}, {"en": "Jana", "ar": "جنى"}], "story": {"hero": {"eyebrow": {"en": "Women only / New Cairo", "ar": "للسيدات فقط / القاهرة الجديدة"}, "h1": {"en": "Your hour, <em>beautifully booked.</em>", "ar": "ساعتك، <em>محجوزة بشياكة.</em>"}, "p": {"en": "Hair, color and nails by women, for women. Choose your stylist and your time in a few taps.", "ar": "شعر وصبغة وأظافر، من سيدات لسيدات. اختاري الستايلست والميعاد في كام ضغطة."}}, "facts": [{"v": {"en": "Women only", "ar": "سيدات فقط"}, "k": {"en": "Private, all-female team", "ar": "فريق كله سيدات"}}, {"v": {"en": "11am to 9pm", "ar": "11 الصبح لـ 9 بالليل"}, "k": {"en": "Closed Mondays", "ar": "الاتنين إجازة"}}, {"v": {"en": "From 350 EGP", "ar": "من 350 ج.م"}, "k": {"en": "Manicure", "ar": "مانيكير"}}], "chapters": [{"k": {"en": "The mirror", "ar": "المراية"}, "h": {"en": "See your stylist's day.", "ar": "شوفي يوم الستايلست بتاعتك."}, "p": {"en": "Live free times for Nour, Salma and Mariam, so you book the hour that suits you.", "ar": "مواعيد نور وسلمى ومريم الفاضية قدامك، فتحجزي الساعة اللي تناسبك."}}, {"k": {"en": "The hair", "ar": "الشعر"}, "h": {"en": "Color without the guesswork.", "ar": "صبغة من غير تخمين."}, "p": {"en": "Every service shows its time and price up front. No surprises at the counter.", "ar": "كل خدمة مكتوب وقتها وسعرها من الأول. مفيش مفاجآت عند الحساب."}}, {"k": {"en": "The finish", "ar": "اللمسة الأخيرة"}, "h": {"en": "Nails to match.", "ar": "أظافر على نفس الستايل."}, "p": {"en": "Add a manicure to any booking and get a reminder the evening before.", "ar": "ضيفي مانيكير لأي حجز، وهيوصلك تذكير بالليل قبلها."}}], "end": {"en": "Your hour <em>is waiting.</em>", "ar": "ساعتك <em>مستنياكي.</em>"}}, "scene": {"objects": [["mirror", 1.0], ["strands", 0.95], ["polish", 1.05]], "metal": 15120806, "handle": 2758178, "liquid": 11027307, "exposure": 0.95, "ambient": 0.25, "shadow": 2758178, "shadowOpacity": 0.14, "rimColor": 16761558}};</script>
+<script src="../engine.js"></script>
+<script type="importmap">{"imports":{"three":"../../vendor/three.module.js","three/addons/":"../../vendor/addons/"}}</script>
+<script type="module" src="scene.js"></script>
+</body>
+</html>

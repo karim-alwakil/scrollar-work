@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Layla & Omar</title>
+<meta name="description" content="Layla & Omar, a wedding invitation concept by Scrollar: the envelope opens as you scroll.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Aref+Ruqaa:wght@400;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--g0:#04050a;--g1:#090c16;--g2:#111827;--ivory:#f4ecdc;--ink:#f4ecdc;--mut:#b9b29f;--gold:#d8b46a;--gold2:#f3dca0;--line:rgba(216,180,106,.28);
+  --serif:'Cormorant Garamond',Georgia,serif;--script:'Pinyon Script','Cormorant Garamond',cursive;--ar:'Amiri','Times New Roman',serif;--arscript:'Aref Ruqaa','Amiri',serif}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:radial-gradient(120% 90% at 50% 30%,var(--g2),var(--g1) 45%,var(--g0));background-attachment:fixed;color:var(--ink);font-family:var(--serif);font-size:18px;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+html[lang=ar] body{font-family:var(--ar)}
+a{color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:6px}
+.wrap{padding-inline:max(18px,env(safe-area-inset-left,0px))}
+@media(min-width:900px){.wrap{padding-inline:56px}}
+nav{position:fixed;inset:0 0 auto 0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding-block:14px}
+.mono{font-family:var(--serif);font-size:13px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold)}
+html[lang=ar] .mono{letter-spacing:0;font-family:var(--ar);font-size:15px}
+.chip{border:1px solid var(--line);background:rgba(6,19,15,.5);border-radius:999px;padding:7px 14px;font-size:15px;cursor:pointer;color:var(--ivory)}
+.concept{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--mut);border:1px solid var(--line);border-radius:999px;padding:5px 10px}
+html[lang=ar] .concept{letter-spacing:0;font-size:12px}
+.navr{display:flex;gap:8px;align-items:center}
+/* story */
+#story{position:relative;height:900vh}
+.sticky{position:sticky;top:0;height:100vh;overflow:hidden}
+#stage{position:absolute;inset:0;width:100%;height:100%;display:block}
+.layer{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;text-align:center;padding-bottom:9vh;pointer-events:none}
+[data-step]{opacity:0}[data-step^="0,"]{opacity:1}
+.cap h1{font-family:var(--script);font-weight:400;font-size:clamp(44px,7vw,78px);line-height:1;color:var(--gold2);text-shadow:0 2px 20px rgba(0,0,0,.4)}
+html[lang=ar] .cap h1{font-family:var(--arscript);font-size:clamp(38px,6vw,64px);line-height:1.4}
+.cap p{margin-top:10px;color:var(--mut);font-size:17px;letter-spacing:.06em}
+.hint{margin-top:18px;display:inline-flex;flex-direction:column;align-items:center;gap:6px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+html[lang=ar] .hint{letter-spacing:0;font-size:15px}
+.hint i{width:1px;height:34px;background:linear-gradient(var(--gold),transparent);animation:drip 1.8s ease-in-out infinite}
+@keyframes drip{0%{transform:scaleY(.2);transform-origin:top}50%{transform:scaleY(1)}100%{transform:scaleY(.2);transform-origin:bottom}}
+.side{position:absolute;inset-block:0;inset-inline-start:0;display:flex;flex-direction:column;justify-content:center;max-width:340px;padding-inline:56px;text-align:start;pointer-events:none}
+.side .mono{margin-bottom:10px}
+.side h2{font-family:var(--serif);font-weight:500;font-size:40px;line-height:1.05;color:var(--ivory)}
+html[lang=ar] .side h2{font-family:var(--ar);font-size:34px;line-height:1.4}
+.side p{color:var(--mut);margin-top:10px;font-size:17px;line-height:1.5}
+@media(max-width:899px){.side{display:none}}
+.track{position:absolute;inset-inline:18px;bottom:16px;height:1px;background:var(--line)}
+#progress{height:1px;background:var(--gold);transform-origin:left;transform:scaleX(0)}
+html[dir=rtl] #progress{transform-origin:right}
+/* details */
+section.blk{padding-block:clamp(64px,10vw,110px);border-top:1px solid var(--line);text-align:center}
+.blk h2{font-family:var(--script);font-weight:400;font-size:clamp(42px,6vw,64px);color:var(--gold2);line-height:1.1}
+html[lang=ar] .blk h2{font-family:var(--arscript);line-height:1.5}
+.blk .lead{color:var(--mut);margin:8px auto 0;max-width:520px;line-height:1.6}
+.count{display:flex;justify-content:center;gap:clamp(10px,3vw,28px);margin-top:30px}
+.count div{min-width:76px;border:1px solid var(--line);border-radius:14px;padding:14px 8px;background:rgba(6,19,15,.35)}
+.count b{display:block;font-size:40px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--ivory);font-family:var(--serif)}
+.count span{font-size:13px;color:var(--mut);letter-spacing:.12em;text-transform:uppercase}
+html[lang=ar] .count span{letter-spacing:0}
+.prog{max-width:560px;margin:30px auto 0;display:grid;gap:12px}
+.prog div{display:flex;justify-content:space-between;align-items:baseline;gap:16px;border-bottom:1px solid var(--line);padding:12px 4px;font-size:20px}
+.prog b{font-weight:600;color:var(--gold2);font-variant-numeric:tabular-nums}
+.btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:28px}
+.btn{display:inline-flex;align-items:center;gap:8px;justify-content:center;border-radius:999px;padding:13px 22px;font-size:17px;font-weight:600;text-decoration:none;cursor:pointer;border:1px solid var(--gold);background:linear-gradient(180deg,var(--gold2),var(--gold));color:#2a1f0c}
+.btn.ghost{background:transparent;color:var(--gold2)}
+form.rsvp{max-width:520px;margin:30px auto 0;display:grid;gap:14px;text-align:start}
+.field{display:grid;gap:6px;font-size:15px;color:var(--mut)}
+.field input,.field select,.field textarea{background:rgba(6,19,15,.5);border:1px solid var(--line);border-radius:12px;padding:12px 14px;color:var(--ivory);font-size:17px}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.seg button{border:1px solid var(--line);border-radius:12px;padding:12px;background:rgba(6,19,15,.4);cursor:pointer;font-size:17px}
+.seg button[aria-pressed=true]{background:var(--gold);color:#2a1f0c;border-color:var(--gold)}
+.note{font-size:13px;color:var(--mut);text-align:center}
+footer{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;padding-block:26px;border-top:1px solid var(--line);font-size:14px;color:var(--mut)}
+@media(max-width:899px){.layer{padding-bottom:7vh}}
+.layer.top{justify-content:flex-start;padding-top:9vh;padding-bottom:0}
+.lead2{font-size:22px;color:var(--ivory);margin-top:6px;font-style:italic}html[lang=ar] .lead2{font-style:normal}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.hint i{animation:none}}
+</style>
+</head>
+<body>
+<nav class="wrap"><span class="concept" data-i18n="concept">Concept by Scrollar</span><div class="navr"><button class="chip" id="langBtn" type="button">عربي</button></div></nav>
+
+<div id="story"><div class="sticky"><canvas id="stage" aria-label="An envelope opening into a wedding invitation"></canvas>
+  <div class="layer cap" data-step="0,0.05"><p class="mono" id="toLine"></p><p class="lead2" data-i18n="youre">You're invited to a wedding</p><span class="hint"><i></i><span data-i18n="scroll">Scroll to light the sparkler</span></span></div>
+  <div class="layer cap" data-step="0.24,0.42"><p class="mono" data-i18n="s1k">The date</p></div>
+  <div class="layer cap" data-step="0.44,0.62"><p class="mono" data-i18n="s2k">The evening begins</p></div>
+  <div class="layer cap" data-step="0.64,0.8"><p class="mono" data-i18n="s3k">The place</p></div>
+  <div class="layer cap top" data-step="0.93,1"><h1 data-i18n="join">Will you join us?</h1><p data-i18n="joinp">Scroll down to reply</p></div>
+  <div class="track"><div id="progress"></div></div>
+</div></div>
+
+<section class="blk wrap"><h2 data-i18n="cdh">Counting the days</h2><p class="lead" data-i18n="cdp">Saturday, 12 December 2026</p>
+  <div class="count" aria-live="polite"><div><b id="cd-d">0</b><span data-i18n="d">Days</span></div><div><b id="cd-h">0</b><span data-i18n="h">Hours</span></div><div><b id="cd-m">0</b><span data-i18n="m">Minutes</span></div></div>
+  <div class="btns"><a class="btn ghost" id="calBtn" target="_blank" rel="noopener" data-i18n="cal">Add to calendar</a></div>
+</section>
+<section class="blk wrap"><h2 data-i18n="evh">The evening</h2>
+  <div class="prog">
+    <div><span data-i18n="e1">Katb El Ketab</span><b><bdi dir="ltr">7:00 PM</bdi></b></div>
+    <div><span data-i18n="e2">Zaffa</span><b><bdi dir="ltr">8:30 PM</bdi></b></div>
+    <div><span data-i18n="e3">Dinner</span><b><bdi dir="ltr">10:00 PM</bdi></b></div>
+    <div><span data-i18n="e4">Dress code</span><b data-i18n="e4v">Black tie</b></div>
+  </div>
+  <p class="lead" style="margin-top:26px" data-i18n="venue">The Nile Ballroom, Zamalek, Cairo</p>
+  <div class="btns"><a class="btn" href="https://www.google.com/maps/search/?api=1&query=Zamalek%2C%20Cairo" target="_blank" rel="noopener" data-i18n="map">Open in Google Maps</a></div>
+</section>
+<section class="blk wrap" id="rsvp"><h2 data-i18n="rh">Kindly reply</h2><p class="lead" data-i18n="rp">Please let us know by 1 December.</p>
+  <form class="rsvp" onsubmit="return false">
+    <label class="field"><span data-i18n="fn">Your name</span><input id="rName" autocomplete="name"></label>
+    <div class="field"><span data-i18n="fa">Will you attend?</span><div class="seg"><button type="button" id="yes" aria-pressed="true" data-i18n="yes">Joyfully attending</button><button type="button" id="no" aria-pressed="false" data-i18n="no">Regretfully decline</button></div></div>
+    <label class="field" id="guestsF"><span data-i18n="fg">Number of guests</span><select id="rCount"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option></select></label>
+    <label class="field"><span data-i18n="fm">A message for the couple (optional)</span><textarea id="rMsg" rows="3"></textarea></label>
+    <a class="btn" id="sendBtn" target="_blank" rel="noopener" data-i18n="send">Send reply on WhatsApp</a>
+    <p class="note" data-i18n="demo">Concept demo: replies go to Scrollar's WhatsApp, not to a real couple.</p>
+  </form>
+</section>
+<footer class="wrap"><span data-i18n="foot">Layla & Omar · a wedding invitation concept by Scrollar</span><a id="backLink" href="../../" data-i18n="back">More Scrollar work</a></footer>
+
+<script src="invite.js"></script>
+<script type="importmap">{"imports":{"three":"../../vendor/three.module.js","three/addons/":"../../vendor/addons/"}}</script>
+<script type="module" src="scene.js"></script>
+</body>
+</html>

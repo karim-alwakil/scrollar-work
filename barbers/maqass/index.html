@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maqass · Barber atelier, Cairo</title>
+<meta name="theme-color" content="#0d0c0b">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600;700;800&family=Readex+Pro:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d0c0b; --bg2:#151311; --ink:#f1ebe1; --mute:#9b9287; --dim:#5e574f; --line:rgba(241,235,225,.12);
+  --brass:#c9a46a; --brass2:#e3c58f;
+  --sans:'Inter Tight',system-ui,sans-serif; --serif:'Instrument Serif',Georgia,serif; --mono:'IBM Plex Mono',ui-monospace,monospace;
+  --ar:'Readex Pro',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg);color-scheme:dark}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+html[lang=ar] body{font-family:var(--ar)}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+.mono{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute)}
+html[lang=ar] .mono{font-family:var(--ar);letter-spacing:0;font-size:13px}
+em,.it{font-family:var(--serif);font-style:italic;font-weight:400;letter-spacing:-.01em}
+html[lang=ar] em,html[lang=ar] .it{font-family:var(--ar);font-style:normal;font-weight:300}
+
+/* grain + cursor */
+.grain{position:fixed;inset:-50%;width:200%;height:200%;pointer-events:none;z-index:90;opacity:.09;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation:grain 1s steps(6) infinite}
+@keyframes grain{0%{transform:translate(0,0)}20%{transform:translate(-3%,2%)}40%{transform:translate(2%,-4%)}60%{transform:translate(-4%,-1%)}80%{transform:translate(3%,3%)}100%{transform:translate(0,0)}}
+.cur{position:fixed;left:0;top:0;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;background:var(--ink);pointer-events:none;z-index:95;mix-blend-mode:difference;transition:width .3s,height .3s,margin .3s;display:none}
+.cur.big{width:64px;height:64px;margin:-32px 0 0 -32px}
+@media (hover:hover) and (pointer:fine){.cur{display:block}}
+
+/* gate */
+#gate{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;transition:opacity .9s ease,visibility .9s}
+#gate.out{opacity:0;visibility:hidden}
+#gate .w{font-family:var(--serif);font-size:clamp(56px,9vw,128px);line-height:.9;letter-spacing:-.02em}
+#gate .w small{display:block;text-align:center;font-family:var(--ar);font-size:.26em;letter-spacing:0;color:var(--brass);margin-top:10px}
+#gate .pct{font-family:var(--mono);font-size:12px;color:var(--mute);letter-spacing:.2em}
+#gate .go{display:flex;gap:12px;opacity:0;transform:translateY(8px);transition:.6s}
+#gate.ready .go{opacity:1;transform:none}
+#gate.ready .pct{opacity:0}
+.pill{border:1px solid var(--line);border-radius:999px;padding:13px 22px;font-size:14px;font-weight:500;transition:background .25s,color .25s,border-color .25s}
+.pill:hover{background:var(--ink);color:var(--bg)}
+.pill.solid{background:var(--ink);color:var(--bg)}
+.pill.solid:hover{background:var(--brass2)}
+
+/* nav */
+nav{position:fixed;inset:0 0 auto 0;z-index:60;display:flex;align-items:center;justify-content:space-between;padding:22px clamp(16px,3vw,40px);mix-blend-mode:difference}
+.logo{font-family:var(--serif);font-size:26px;letter-spacing:-.01em;display:flex;align-items:baseline;gap:10px}
+.logo small{font-family:var(--ar);font-size:14px;color:var(--mute)}
+nav .links{display:flex;gap:28px;font-size:13px;font-weight:500}
+nav .links a{opacity:.8}nav .links a:hover{opacity:1}
+nav .r{display:flex;gap:10px;align-items:center}
+nav .pill{padding:9px 16px;font-size:13px}
+@media (max-width:760px){nav .links{display:none}}
+
+/* canvas */
+#gl{position:fixed;inset:0;width:100vw;height:100vh;z-index:20;pointer-events:none}
+
+/* sticky sections */
+.sec{position:relative}
+.stage{position:sticky;top:0;height:100vh;overflow:hidden}
+.frame{position:absolute;overflow:hidden;background:#000;will-change:clip-path}
+.frame video,.frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.frame .shade{position:absolute;inset:0;background:radial-gradient(120% 90% at 50% 40%,transparent 30%,rgba(0,0,0,.6));pointer-events:none}
+.tag{position:absolute;font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);opacity:.8}
+html[lang=ar] .tag{font-family:var(--ar);letter-spacing:0;font-size:12px}
+
+/* hero */
+#hero{height:360vh}
+#hero .frame{inset:0}
+#hero h1{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);z-index:30;pointer-events:none;font-weight:800;letter-spacing:-.055em;line-height:.8;font-size:clamp(64px,12.6vw,250px);text-align:center;display:flex;justify-content:center;gap:.18em;white-space:nowrap}
+#hero h1 .a,#hero h1 .b{display:inline-block;will-change:transform}
+#hero h1 em{font-weight:400;letter-spacing:-.03em}
+html[lang=ar] #hero h1{font-weight:700;letter-spacing:0;line-height:1.1;font-size:clamp(70px,13vw,220px)}
+#hero .kick{position:absolute;left:clamp(16px,3vw,40px);bottom:32px;z-index:30;max-width:340px}
+#hero .kick p{font-size:15px;line-height:1.5;color:var(--ink);opacity:.85;margin-top:10px}
+#hero .cue{position:absolute;right:clamp(16px,3vw,40px);bottom:32px;z-index:30}
+#hero .cap{position:absolute;left:clamp(16px,4vw,64px);top:50%;transform:translateY(-50%);z-index:30;max-width:30vw;opacity:0}
+#hero .cap h3{font-family:var(--serif);font-weight:400;font-size:clamp(30px,3.4vw,54px);line-height:1;letter-spacing:-.01em}
+html[lang=ar] #hero .cap h3{font-family:var(--ar);font-weight:300}
+#hero .cap p{color:var(--mute);margin-top:14px;font-size:15px;line-height:1.55}
+@media (max-width:760px){#hero .cap{left:16px;right:16px;max-width:none;top:auto;bottom:90px;transform:none}}
+
+/* tools */
+#tools{height:380vh}
+#tools .frame{left:clamp(16px,6vw,96px);top:14vh;width:min(36vw,520px);height:72vh}
+html[dir=rtl] #tools .frame{left:auto;right:clamp(16px,6vw,96px)}
+#tools .lines{position:absolute;right:clamp(16px,6vw,96px);top:16vh;width:min(46vw,680px);z-index:30}
+html[dir=rtl] #tools .lines{right:auto;left:clamp(16px,6vw,96px)}
+#tools .lines .l{display:block;overflow:hidden;font-size:clamp(42px,5.6vw,92px);font-weight:700;letter-spacing:-.045em;line-height:.98}
+html[lang=ar] #tools .lines .l{letter-spacing:0;font-weight:600;line-height:1.25}
+#tools .lines .l>span{display:inline-block;transform:translateY(105%);will-change:transform}
+#tools .lines .l em{font-weight:400}
+#tools .razcap{position:absolute;right:clamp(16px,6vw,96px);bottom:12vh;z-index:30;text-align:end;opacity:0}
+html[dir=rtl] #tools .razcap{right:auto;left:clamp(16px,6vw,96px)}
+#tools .razcap h3{font-family:var(--serif);font-weight:400;font-size:clamp(34px,4vw,64px);line-height:1}
+html[lang=ar] #tools .razcap h3{font-family:var(--ar);font-weight:300}
+#tools .razcap .meta{display:flex;gap:18px;justify-content:flex-end;margin-top:14px}
+#tools .razcap .meta b{font-weight:600;color:var(--brass2)}
+@media (max-width:760px){#tools .frame{left:16px;right:16px;width:auto;top:10vh;height:46vh}#tools .lines{left:16px;right:16px;width:auto;top:auto;bottom:10vh}#tools .razcap{left:16px;right:16px;bottom:8vh}}
+
+/* menu */
+#menu{padding:22vh clamp(16px,6vw,96px) 16vh;position:relative;z-index:25;background:var(--bg)}
+.mhead{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:56px;flex-wrap:wrap}
+.mhead h2{font-size:clamp(56px,8vw,140px);font-weight:700;letter-spacing:-.05em;line-height:.85}
+html[lang=ar] .mhead h2{letter-spacing:0;line-height:1.1}
+.mhead h2 em{font-weight:400}
+.mhead p{max-width:360px;color:var(--mute);line-height:1.6;font-size:15px}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:80px}
+.card{position:relative;aspect-ratio:4/5;overflow:hidden;border-radius:4px;background:#000}
+.card video,.card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.06);transition:transform 1.2s cubic-bezier(.2,.7,.1,1)}
+.card:hover video{transform:scale(1)}
+.card .ov{position:absolute;inset:auto 0 0 0;padding:28px;background:linear-gradient(transparent,rgba(0,0,0,.75));display:flex;justify-content:space-between;align-items:flex-end}
+.card h3{font-family:var(--serif);font-weight:400;font-size:clamp(40px,5vw,84px);line-height:.9}
+html[lang=ar] .card h3{font-family:var(--ar);font-weight:300}
+.card .pr{font-family:var(--mono);font-size:13px;color:var(--brass2)}
+.list{border-top:1px solid var(--line)}
+.row{display:grid;grid-template-columns:56px 1fr auto auto;gap:24px;align-items:baseline;padding:26px 0;border-bottom:1px solid var(--line);transition:padding .4s}
+.row:hover{padding-inline-start:14px}
+.row .n{font-family:var(--mono);font-size:12px;color:var(--dim)}
+.row h4{font-size:clamp(22px,2.4vw,36px);font-weight:600;letter-spacing:-.03em}
+html[lang=ar] .row h4{letter-spacing:0}
+.row h4 small{display:block;font-size:14px;font-weight:400;color:var(--mute);letter-spacing:0;margin-top:6px}
+.row .d{font-family:var(--mono);font-size:12px;color:var(--mute)}
+.row .p{font-size:clamp(20px,2vw,28px);font-weight:600;color:var(--brass2);min-width:110px;text-align:end}
+@media (max-width:760px){.cards{grid-template-columns:1fr}.row{grid-template-columns:1fr auto;gap:8px}.row .n,.row .d{display:none}}
+
+/* chair */
+#chair{height:340vh}
+#chair .bgv{position:absolute;inset:0;opacity:.0}
+#chair .bgv video{width:100%;height:100%;object-fit:cover;filter:brightness(.5) saturate(.9);transform:scale(1.04)}
+#chair .bgv:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(13,12,11,.85),transparent 50%,rgba(13,12,11,.6)),radial-gradient(60% 60% at 50% 55%,rgba(201,164,106,.12),transparent 60%),linear-gradient(var(--bg),transparent 20%,transparent 80%,var(--bg))}
+#chair .hl{position:absolute;left:clamp(16px,6vw,96px);top:18vh;z-index:30;max-width:34vw}
+html[dir=rtl] #chair .hl{left:auto;right:clamp(16px,6vw,96px)}
+#chair .hl .l{display:block;overflow:hidden;font-size:clamp(46px,6vw,104px);font-weight:700;letter-spacing:-.05em;line-height:.95}
+html[lang=ar] #chair .hl .l{letter-spacing:0;line-height:1.25;font-weight:600}
+#chair .hl .l>span{display:inline-block;transform:translateY(105%)}
+#chair .hl p{color:var(--mute);line-height:1.6;margin-top:22px;max-width:340px;opacity:0;transition:opacity .6s}
+#chair .stats{position:absolute;right:clamp(16px,6vw,96px);bottom:14vh;z-index:30;display:flex;flex-direction:column;gap:26px;text-align:end}
+html[dir=rtl] #chair .stats{right:auto;left:clamp(16px,6vw,96px)}
+#chair .st{opacity:0;transform:translateY(20px)}
+#chair .st b{display:block;font-size:clamp(44px,5vw,80px);font-weight:700;letter-spacing:-.05em;line-height:.9}
+#chair .st b em{font-weight:400;color:var(--brass2)}
+@media (max-width:760px){#chair .hl{max-width:none;right:16px;top:12vh}#chair .stats{bottom:6vh;flex-direction:row;gap:18px}#chair .st b{font-size:34px}}
+
+/* booking */
+#book{position:relative;z-index:25;background:var(--bg2);padding:18vh clamp(16px,6vw,96px) 14vh}
+#book h2{font-size:clamp(56px,8vw,140px);font-weight:700;letter-spacing:-.05em;line-height:.85;margin-bottom:18px}
+html[lang=ar] #book h2{letter-spacing:0;line-height:1.1}
+#book h2 em{font-weight:400}
+#book .sub{color:var(--mute);margin-bottom:60px;max-width:440px;line-height:1.6}
+.bk{display:grid;grid-template-columns:1.4fr 1fr;gap:56px}
+.step{margin-bottom:38px}
+.step .mono{margin-bottom:14px;display:block}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);border-radius:999px;padding:11px 18px;font-size:14px;transition:.2s;white-space:nowrap}
+.chip:hover{border-color:var(--ink)}
+.chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip[disabled]{opacity:.28;text-decoration:line-through;pointer-events:none}
+.chip small{color:inherit;opacity:.6;margin-inline-start:6px}
+.sum{position:sticky;top:110px;align-self:start;border:1px solid var(--line);border-radius:6px;padding:30px;background:var(--bg)}
+.sum dl{display:grid;grid-template-columns:auto 1fr;gap:12px 20px;margin:20px 0 26px;font-size:15px}
+.sum dt{color:var(--mute)}.sum dd{text-align:end}
+.sum .tot{display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid var(--line);padding-top:18px;margin-bottom:24px}
+.sum .tot b{font-size:34px;font-weight:700;letter-spacing:-.03em;color:var(--brass2)}
+.sum a.pill{display:block;text-align:center;padding:16px}
+.sum a.pill.off{opacity:.35;pointer-events:none}
+.sum .note{font-size:13px;color:var(--mute);margin-top:14px;line-height:1.5}
+@media (max-width:860px){.bk{grid-template-columns:1fr}.sum{position:relative;top:0}}
+
+footer{position:relative;z-index:25;background:var(--bg);padding:80px clamp(16px,6vw,96px) 40px;border-top:1px solid var(--line)}
+.fbig{font-family:var(--serif);font-size:clamp(90px,22vw,380px);line-height:.8;letter-spacing:-.03em;margin-bottom:40px}
+.fgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:30px;font-size:14px;line-height:1.7;color:var(--mute)}
+.fgrid b{display:block;color:var(--ink);font-weight:500;margin-bottom:6px}
+.credits{margin-top:50px;font-size:12px;line-height:1.7;color:var(--dim);max-width:820px}
+.credits a{text-decoration:underline}
+.made{display:flex;justify-content:space-between;margin-top:30px;gap:20px;flex-wrap:wrap}
+@media (max-width:760px){.fgrid{grid-template-columns:1fr}}
+
+#snd{position:fixed;left:clamp(16px,3vw,40px);bottom:22px;z-index:70;display:flex;align-items:center;gap:10px;mix-blend-mode:difference}
+html[dir=rtl] #snd{left:auto;right:clamp(16px,3vw,40px)}
+#snd i{display:flex;gap:2px;align-items:flex-end;height:12px}
+#snd i s{display:block;width:2px;background:var(--ink);height:3px;transition:height .2s}
+#snd.on i s{animation:eq 1s infinite ease-in-out}
+#snd.on i s:nth-child(2){animation-delay:.2s}#snd.on i s:nth-child(3){animation-delay:.4s}#snd.on i s:nth-child(4){animation-delay:.1s}
+@keyframes eq{0%,100%{height:3px}50%{height:12px}}
+.badge{position:fixed;right:clamp(16px,3vw,40px);bottom:22px;z-index:70;mix-blend-mode:difference}
+html[dir=rtl] .badge{right:auto;left:clamp(16px,3vw,40px)}
+@media (prefers-reduced-motion:reduce){.grain{animation:none}}
+</style>
+</head>
+<body>
+<div class="grain"></div>
+<div class="cur" id="cur"></div>
+
+<div id="gate">
+  <div class="w">Maqass<small>مقص</small></div>
+  <div class="pct" id="pct">000</div>
+  <div class="go">
+    <button class="pill solid" id="enterS" data-i18n="g.s">Enter with sound</button>
+    <button class="pill" id="enterQ" data-i18n="g.q">Enter quietly</button>
+  </div>
+</div>
+
+<nav>
+  <a class="logo" href="#hero">Maqass <small>مقص</small></a>
+  <div class="links"><a href="#tools" data-i18n="n.1">Atelier</a><a href="#menu" data-i18n="n.2">Menu</a><a href="#chair" data-i18n="n.3">Chairs</a></div>
+  <div class="r"><button class="pill" id="lang">عربي</button><a class="pill solid" href="#book" data-i18n="n.b">Book a chair</a></div>
+</nav>
+
+<canvas id="gl"></canvas>
+
+<main>
+<section class="sec" id="hero">
+  <div class="stage">
+    <div class="frame" id="f1"><video src="assets/43222.mp4" poster="assets/43222.jpg" muted loop playsinline preload="auto"></video><div class="shade"></div></div>
+    <h1><span class="a" data-i18n="h.a">Sharp</span><span class="b" data-i18n-html="h.b">is a <em>ritual.</em></span></h1>
+    <div class="kick"><span class="mono" data-i18n="h.k">Barber atelier / Zamalek, Cairo</span><p data-i18n="h.p">Cuts, fades and hot towel shaves. By appointment only, so nobody waits.</p></div>
+    <span class="mono cue" data-i18n="h.c">Scroll</span>
+    <div class="cap" id="cap1"><span class="mono" data-i18n="c1.k">01 / The consultation</span><h3 data-i18n-html="c1.h">Every cut starts<br><em>with a conversation.</em></h3><p data-i18n="c1.p">A consultation before any blade: your face shape, your hair, your morning routine.</p></div>
+  </div>
+</section>
+
+<section class="sec" id="tools">
+  <div class="stage">
+    <div class="frame" id="f2"><video src="assets/43231.mp4" poster="assets/43231.jpg" muted loop playsinline preload="auto"></video><div class="shade"></div><span class="tag" style="left:18px;top:16px" data-i18n="t.tag">02 / The tools</span></div>
+    <div class="lines" id="lines2">
+      <span class="l"><span data-i18n="t.1">Steel. Leather.</span></span>
+      <span class="l"><span data-i18n-html="t.2"><em>Hot towels.</em></span></span>
+      <span class="l"><span data-i18n="t.3">Nothing here</span></span>
+      <span class="l"><span data-i18n-html="t.4">is <em>rushed.</em></span></span>
+    </div>
+    <div class="razcap" id="razcap"><span class="mono" data-i18n="r.k">The signature</span><h3 data-i18n-html="r.h">The straight<br><em>razor shave.</em></h3><div class="meta mono"><span data-i18n="r.d">45 min</span><b data-i18n="r.p">450 EGP</b></div></div>
+  </div>
+</section>
+
+<section id="menu">
+  <div class="mhead"><h2 data-i18n-html="m.h">The <em>menu.</em></h2><p data-i18n="m.p">Every visit starts with a consultation and ends with a hot towel. Prices include both.</p></div>
+  <div class="cards">
+    <div class="card hov"><video src="assets/40128.mp4" poster="assets/40128.jpg" muted loop playsinline preload="metadata"></video><div class="ov"><h3 data-i18n="m.c1">The fade.</h3><span class="pr" data-i18n="m.c1p">From 350 EGP</span></div></div>
+    <div class="card hov"><video src="assets/40129.mp4" poster="assets/40129.jpg" muted loop playsinline preload="metadata"></video><div class="ov"><h3 data-i18n="m.c2">The line.</h3><span class="pr" data-i18n="m.c2p">From 200 EGP</span></div></div>
+  </div>
+  <div class="list" id="list"></div>
+</section>
+
+<section class="sec" id="chair">
+  <div class="stage">
+    <div class="bgv" id="bgv"><video src="assets/43236.mp4" poster="assets/43236.jpg" muted loop playsinline preload="auto"></video></div>
+    <div class="hl" id="hl3">
+      <span class="l"><span data-i18n="ch.1">Your chair</span></span>
+      <span class="l"><span data-i18n-html="ch.2">is <em>waiting.</em></span></span>
+      <p data-i18n="ch.p">Four restored chairs, four barbers, one client each. Book the hour and it is yours.</p>
+    </div>
+    <div class="stats">
+      <div class="st"><b>4 <em data-i18n="s.1b">chairs</em></b><span class="mono" data-i18n="s.1">Restored, 1920s style</span></div>
+      <div class="st"><b>0 <em data-i18n="s.2b">min</em></b><span class="mono" data-i18n="s.2">Waiting time, by design</span></div>
+      <div class="st"><b>7 <em data-i18n="s.3b">days</em></b><span class="mono" data-i18n="s.3">11:00 to 23:00</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="book">
+  <span class="mono" data-i18n="b.k">Reservations</span>
+  <h2 data-i18n-html="b.h">Book your <em>chair.</em></h2>
+  <p class="sub" data-i18n="b.p">Pick a service, a barber and a time. Your booking opens in WhatsApp, ready to send. Pay at the shop.</p>
+  <div class="bk">
+    <div>
+      <div class="step"><span class="mono" data-i18n="b.s1">01 / Service</span><div class="chips" id="cSvc"></div></div>
+      <div class="step"><span class="mono" data-i18n="b.s2">02 / Barber</span><div class="chips" id="cBar"></div></div>
+      <div class="step"><span class="mono" data-i18n="b.s3">03 / Day</span><div class="chips" id="cDay"></div></div>
+      <div class="step"><span class="mono" data-i18n="b.s4">04 / Time</span><div class="chips" id="cTime"></div></div>
+    </div>
+    <aside class="sum">
+      <span class="mono" data-i18n="b.sum">Your booking</span>
+      <dl id="sumdl"></dl>
+      <div class="tot"><span class="mono" data-i18n="b.tot">Total</span><b id="tot">0</b></div>
+      <a class="pill solid off" id="wa" href="#" target="_blank" rel="noopener" data-i18n="b.go">Confirm on WhatsApp</a>
+      <p class="note" data-i18n="b.n">No deposit. Cancel or move your booking anytime by replying to the same chat.</p>
+    </aside>
+  </div>
+</section>
+
+<footer>
+  <div class="fbig">Maqass</div>
+  <div class="fgrid">
+    <div><b data-i18n="f.a">Find us</b><span data-i18n="f.a1">14 Brazil Street, Zamalek, Cairo</span></div>
+    <div><b data-i18n="f.h">Hours</b><span data-i18n="f.h1">Every day, 11:00 to 23:00</span></div>
+    <div><b data-i18n="f.c">Contact</b><a href="#book" data-i18n="f.c1">Book on WhatsApp</a></div>
+  </div>
+  <p class="credits" data-i18n-html="f.cr">Concept site for a fictional barber, made by Scrollar. Footage: Mixkit (Mixkit License).</p>
+  <div class="made"><span class="mono">© 2026 Maqass</span><a class="mono" id="back" href="../../index.html" data-i18n="f.m">Concept by Scrollar</a></div>
+</footer>
+</main>
+
+<button id="snd" class="mono"><i><s></s><s></s><s></s><s></s></i><span data-i18n="snd">Sound</span></button>
+
+<script src="../../vendor/lenis.min.js"></script>
+<script type="importmap">{"imports":{"three":"../../vendor/three.module.js","three/addons/":"../../vendor/addons/"}}</script>
+<script type="module" src="scene.js"></script>
+</body>
+</html>

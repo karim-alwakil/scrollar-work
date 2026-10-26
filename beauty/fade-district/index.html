@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fade District</title>
+<meta name="description" content="Fade District, a barbershop concept in Cairo by Scrollar: 3D story and booking in four taps.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=Archivo:wght@400;500;700&family=Lalezar&family=Readex+Pro:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../base.css">
+<style>
+:root{color-scheme:dark;--bg:#0e0f11;--panel:#16181b;--ink:#f1eee8;--mut:#8d9097;--accent:#e23b2e;--accent-ink:#ffffff;--sel:rgba(226,59,46,.16);--line:rgba(241,238,232,.12);--display:'Big Shoulders Display',Impact,sans-serif;--display-w:800;--display-ls:.005em;--body:'Archivo',Arial,sans-serif;--ar-display:'Lalezar','Readex Pro',sans-serif;--ar-body:'Readex Pro',Tahoma,sans-serif;--radius:6px;--radius-sm:6px;--radius-lg:10px;--glow:radial-gradient(55% 60% at 70% 45%,rgba(226,59,46,.18),transparent 70%);}
+html[lang=en] h1,html[lang=en] h2,html[lang=en] .brand{text-transform:uppercase}#story{height:760vh}.glow{display:none}@media(min-width:761px){.hero,.chapter{background:rgba(11,12,14,.8);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);padding:30px 32px;border-radius:10px;box-shadow:0 30px 80px rgba(0,0,0,.45)}.chapter{max-width:430px}}
+</style>
+</head>
+<body>
+<nav class="wrap"><a class="brand" id="brand" href="#">Fade District</a><div class="navr"><button class="chip" id="langBtn" type="button">عربي</button><a class="cta" id="navBook" href="#book">Book</a></div></nav>
+<div id="story"><div class="sticky"><div class="glow"></div><canvas id="stage" aria-label="3D scene"></canvas>
+  <div class="layer wrap" id="lHero" data-step="0,0.13"></div>
+  <div class="layer wrap" id="lC0" data-step="0.2,0.4"></div>
+  <div class="layer wrap" id="lC1" data-step="0.43,0.63"></div>
+  <div class="layer wrap" id="lC2" data-step="0.66,0.86"></div>
+  <div class="layer wrap" id="lEnd" data-step="0.9,1"></div>
+  <div class="track"><div id="progress"></div></div>
+</div></div>
+<section class="blk wrap" id="book"><div class="shead"><h2 id="bookH"></h2><p id="bookP"></p></div><div class="book"><div class="steps" id="steps"></div><aside class="summary" id="summary"></aside></div></section>
+<section class="blk wrap"><div class="shead"><h2 id="ownerH"></h2><p id="ownerP"></p></div><div class="owner" id="owner"></div></section>
+<footer class="wrap" id="foot"></footer>
+<script>window.CONCEPT = {"id": "fade-district", "name": {"en": "Fade District", "ar": "فيد ديستريكت"}, "city": {"en": "Barbershop / Nasr City, Cairo", "ar": "باربر شوب / مدينة نصر، القاهرة"}, "staffWord": {"en": "barber", "ar": "الحلاق"}, "currency": {"en": "EGP", "ar": "ج.م"}, "wa": "", "defaultLang": "en", "arLocale": "ar-EG", "hours": {"open": "12:00", "close": "23:30", "step": 30, "closed": []}, "services": [{"id": "cut", "name": {"en": "Classic haircut", "ar": "قصة شعر كلاسيك"}, "min": 30, "price": 250}, {"id": "fade", "name": {"en": "Skin fade", "ar": "سكين فيد"}, "min": 45, "price": 300}, {"id": "combo", "name": {"en": "Cut and beard", "ar": "شعر ودقن"}, "min": 60, "price": 400}, {"id": "beard", "name": {"en": "Beard sculpt", "ar": "تحديد دقن"}, "min": 20, "price": 150}, {"id": "shave", "name": {"en": "Hot towel shave", "ar": "حلاقة بالفوطة السخنة"}, "min": 30, "price": 200}, {"id": "kids", "name": {"en": "Kids cut", "ar": "قصة أطفال"}, "min": 30, "price": 180, "note": {"en": "Under 12", "ar": "أقل من 12 سنة"}}], "staff": [{"id": "karim", "name": {"en": "Karim", "ar": "كريم"}, "role": {"en": "Fades", "ar": "فيد"}}, {"id": "youssef", "name": {"en": "Youssef", "ar": "يوسف"}, "role": {"en": "Beards", "ar": "دقن"}}, {"id": "omar", "name": {"en": "Omar", "ar": "عمر"}, "role": {"en": "Classic", "ar": "كلاسيك"}}], "clients": [{"en": "Ahmed", "ar": "أحمد"}, {"en": "Mostafa", "ar": "مصطفى"}, {"en": "Hassan", "ar": "حسن"}, {"en": "Ziad", "ar": "زياد"}, {"en": "Seif", "ar": "سيف"}, {"en": "Adham", "ar": "أدهم"}, {"en": "Mahmoud", "ar": "محمود"}, {"en": "Ali", "ar": "علي"}], "story": {"hero": {"eyebrow": {"en": "Barbershop / Nasr City", "ar": "باربر شوب / مدينة نصر"}, "h1": {"en": "Sharp cuts. <em>Zero waiting.</em>", "ar": "قصّة مظبوطة. <em>من غير انتظار.</em>"}, "p": {"en": "Pick your barber, your cut and your time. Walk in when your chair is ready.", "ar": "اختار الحلاق والقصة والميعاد، وتعالى لما الكرسي يكون جاهز."}}, "facts": [{"v": {"en": "3 barbers", "ar": "3 حلاقين"}, "k": {"en": "Fades, beards, classics", "ar": "فيد ودقن وكلاسيك"}}, {"v": {"en": "12pm to 11:30pm", "ar": "12 الضهر لـ 11:30 بالليل"}, "k": {"en": "Every day", "ar": "كل يوم"}}, {"v": {"en": "From 150 EGP", "ar": "من 150 ج.م"}, "k": {"en": "Beard sculpt", "ar": "تحديد دقن"}}], "chapters": [{"k": {"en": "The chair", "ar": "الكرسي"}, "h": {"en": "Your slot, held for you.", "ar": "ميعادك محجوز ليك."}, "p": {"en": "See live free slots for every barber. No calls, no crowd at the door.", "ar": "شوف المواعيد الفاضية لكل حلاق على طول. من غير مكالمات ولا زحمة على الباب."}}, {"k": {"en": "The barber", "ar": "الحلاق"}, "h": {"en": "Pick who cuts.", "ar": "اختار مين يقصلك."}, "p": {"en": "Karim for fades, Youssef for beards, Omar for the classics. Your choice, every time.", "ar": "كريم للفيد، يوسف للدقن، عمر للكلاسيك. انت اللي بتختار كل مرة."}}, {"k": {"en": "The finish", "ar": "اللمسة الأخيرة"}, "h": {"en": "Hot towel, straight razor.", "ar": "فوطة سخنة وموس."}, "p": {"en": "Add a hot towel shave in one tap and get a reminder an hour before.", "ar": "ضيف حلاقة بالفوطة السخنة بضغطة، وهيوصلك تذكير قبلها بساعة."}}], "end": {"en": "See you <em>in the chair.</em>", "ar": "نشوفك <em>على الكرسي.</em>"}}, "scene": {"objects": [["pole", 0.9], ["shears", 0.8], ["razor", 0.95]], "metal": 13225170, "handle": 1052947, "exposure": 1.15, "ambient": 0.4, "rimColor": 16737877, "shadowOpacity": 0.55}};</script>
+<script src="../engine.js"></script>
+<script type="importmap">{"imports":{"three":"../../vendor/three.module.js","three/addons/":"../../vendor/addons/"}}</script>
+<script type="module" src="scene.js"></script>
+</body>
+</html>

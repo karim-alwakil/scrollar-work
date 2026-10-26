@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Qamar One</title>
+<meta name="description" content="Qamar One, a smart home dial. A product launch concept by Scrollar.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;500;600&family=Inter:wght@400;500;600&family=Readex+Pro:wght@300;400;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0b0d;--panel:#121417;--ink:#f2f1ee;--mut:#8e9299;--line:rgba(242,241,238,.1);--accent:#f0c987;--accent2:#8fd3ff;
+  --display:'Sora',Inter,system-ui,sans-serif;--body:'Inter',system-ui,sans-serif;--ar:'Readex Pro',Tahoma,sans-serif;--mono:'IBM Plex Mono',ui-monospace,monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+html[lang=ar] body{font-family:var(--ar)}
+a{color:inherit;text-decoration:none}button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:8px}
+.wrap{padding-inline:max(18px,env(safe-area-inset-left,0px))}
+@media(min-width:900px){.wrap{padding-inline:56px}}
+nav{position:fixed;inset:0 0 auto 0;z-index:30;display:flex;justify-content:space-between;align-items:center;padding-block:14px;background:linear-gradient(var(--bg) 30%,transparent)}
+.brand{font-family:var(--display);font-weight:600;font-size:20px;letter-spacing:-.01em;display:flex;align-items:center;gap:10px}
+.brand i{width:18px;height:18px;border-radius:50%;background:radial-gradient(circle at 65% 40%,transparent 45%,var(--accent) 47%);display:inline-block}
+.navr{display:flex;gap:8px;align-items:center}
+.chip{border:1px solid var(--line);background:rgba(18,20,23,.7);border-radius:999px;padding:8px 14px;font-size:14px;cursor:pointer}
+.cta{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--ink);color:#0a0b0d;border:0;border-radius:999px;padding:12px 20px;font-weight:600;font-size:15px;cursor:pointer}
+.cta.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.mono{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+html[lang=ar] .mono{letter-spacing:0;font-family:var(--ar);font-size:14px}
+.concept{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut);border:1px solid var(--line);border-radius:999px;padding:5px 10px}
+html[lang=ar] .concept{letter-spacing:0;font-family:var(--ar);font-size:12px}
+/* story */
+#story{position:relative;height:880vh}
+.sticky{position:sticky;top:0;height:100vh;overflow:hidden}
+#stage{position:absolute;inset:0;width:100%;height:100%;display:block}
+#calls{position:absolute;inset:0;pointer-events:none}
+#calls svg{position:absolute;inset:0;width:100%;height:100%}
+.call{position:absolute;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--ink);white-space:nowrap;transform:translateY(-50%);opacity:0}
+.call small{display:block;color:var(--mut);font-size:11px;letter-spacing:.02em;margin-top:2px}
+html[lang=ar] .call{font-family:var(--ar);letter-spacing:0;font-size:13px}
+.layer{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;pointer-events:none}
+.layer>*{pointer-events:auto}
+[data-step]{opacity:0}[data-step^="0,"]{opacity:1}
+.copy{max-width:440px}
+.copy h1{font-family:var(--display);font-weight:500;font-size:clamp(44px,6.4vw,92px);line-height:.98;letter-spacing:-.035em;margin:14px 0 18px}
+.copy h2{font-family:var(--display);font-weight:500;font-size:clamp(34px,4.2vw,58px);line-height:1.02;letter-spacing:-.03em;margin:12px 0 14px}
+html[lang=ar] .copy h1,html[lang=ar] .copy h2{font-family:var(--ar);letter-spacing:0;line-height:1.25;font-weight:600}
+.copy p{color:var(--mut);font-size:17px;line-height:1.6}
+.copy .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px;align-items:center}
+.price{font-family:var(--display);font-size:22px}
+html[lang=ar] .price{font-family:var(--ar)}
+.track{position:absolute;inset-inline:max(18px,env(safe-area-inset-left,0px));bottom:18px;height:1px;background:var(--line)}
+@media(min-width:900px){.track{inset-inline:56px}}
+#progress{height:1px;background:var(--accent);transform-origin:left;transform:scaleX(0)}
+html[dir=rtl] #progress{transform-origin:right}
+@media(max-width:760px){nav .concept{display:none}.call{white-space:normal;max-width:96px;line-height:1.25}.layer{justify-content:flex-end;padding-bottom:56px}.copy{background:linear-gradient(transparent,var(--bg) 26%);margin-inline:-18px;padding:60px 18px 0}.copy h1{font-size:44px}.copy p{font-size:15px}.call{font-size:10px}.call small{display:none}}
+/* sections */
+section.blk{padding-block:clamp(70px,10vw,130px);border-top:1px solid var(--line)}
+.shead h2{font-family:var(--display);font-weight:500;font-size:clamp(34px,4.6vw,60px);letter-spacing:-.03em;line-height:1.02}
+html[lang=ar] .shead h2{font-family:var(--ar);letter-spacing:0;line-height:1.3}
+.shead p{color:var(--mut);max-width:520px;margin-top:12px;line-height:1.6}
+.specs{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:18px;overflow:hidden;margin-top:36px}
+.specs div{background:var(--bg);padding:22px}
+.specs b{display:block;font-family:var(--display);font-weight:500;font-size:24px;letter-spacing:-.02em;margin:8px 0 4px}
+html[lang=ar] .specs b{font-family:var(--ar)}
+.specs span{color:var(--mut);font-size:14px;line-height:1.5}
+.buy{display:grid;grid-template-columns:1fr;gap:28px;margin-top:36px;max-width:620px}
+.swatches{display:flex;gap:12px;flex-wrap:wrap}
+.sw{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:999px;padding:8px 16px 8px 8px;cursor:pointer;background:var(--panel)}
+html[dir=rtl] .sw{padding:8px 8px 8px 16px}
+.sw i{width:26px;height:26px;border-radius:50%;display:inline-block;box-shadow:inset 0 0 0 1px rgba(255,255,255,.2)}
+.sw[aria-pressed=true]{border-color:var(--ink)}
+.qty{display:flex;align-items:center;gap:12px}
+.qty button{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--panel);cursor:pointer;font-size:18px}
+.total{font-family:var(--display);font-size:30px;letter-spacing:-.02em}
+html[lang=ar] .total{font-family:var(--ar)}
+.note{color:var(--mut);font-size:13px}
+footer{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;padding-block:26px;border-top:1px solid var(--line);font-size:13px;color:var(--mut)}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<nav class="wrap"><span class="brand"><i></i><span data-i18n="brand">Qamar</span></span><div class="navr"><span class="concept" data-i18n="concept">Concept by Scrollar</span><button class="chip" id="langBtn" type="button">عربي</button><a class="cta" href="#buy" data-i18n="pre">Pre-order</a></div></nav>
+
+<div id="story"><div class="sticky"><canvas id="stage" aria-label="Qamar One smart dial, turning on and opening into its parts"></canvas>
+  <div id="calls"><svg aria-hidden="true"></svg></div>
+  <div class="layer wrap" data-step="0,0.11"><div class="copy"><span class="mono" data-i18n="h.k">Qamar One · Smart home dial</span><h1 data-i18n="h.h">Your whole home, in one turn.</h1><p data-i18n="h.p">Lights, AC and curtains on a palm-sized dial of aluminium, sapphire and light.</p><div class="row"><a class="cta" href="#buy" data-i18n="pre">Pre-order</a><span class="price"><bdi dir="ltr">6,499</bdi> <span data-i18n="egp">EGP</span></span></div></div></div>
+  <div class="layer wrap" data-step="0.14,0.32"><div class="copy"><span class="mono" data-i18n="c1.k">01 · Wake</span><h2 data-i18n="c1.h">Black glass, until you reach for it.</h2><p data-i18n="c1.p">A 1.4-inch AMOLED wakes as your hand comes close. Turn the knurled ring and the room follows, one click at a time.</p></div></div>
+  <div class="layer wrap" data-step="0.36,0.6"><div class="copy"><span class="mono" data-i18n="c2.k">02 · Inside</span><h2 data-i18n="c2.h">Seven layers. Four screws. No glue.</h2><p data-i18n="c2.p">Every part comes apart with one screwdriver, so every part can be repaired here in Cairo.</p></div></div>
+  <div class="layer wrap" data-step="0.63,0.77"><div class="copy"><span class="mono" data-i18n="c3.k">03 · Q1 chip</span><h2 data-i18n="c3.h">Fast, even when the internet is not.</h2><p data-i18n="c3.p">The Q1 runs your home locally. Lights answer in under 50 ms, and nothing leaves the house unless you allow it.</p></div></div>
+  <div class="layer wrap" data-step="0.8,0.9"><div class="copy"><span class="mono" data-i18n="c4.k">04 · Assembled</span><h2 data-i18n="c4.h">Closed with four turns.</h2><p data-i18n="c4.p">Sapphire on top, aluminium all around. Built to sit on your wall for a decade.</p></div></div>
+  <div class="layer wrap" data-step="0.93,1"><div class="copy"><span class="mono" data-i18n="e.k">Qamar One</span><h2 data-i18n="e.h">Turn it on.</h2><div class="row"><a class="cta" href="#buy" data-i18n="pre">Pre-order</a><span class="price"><bdi dir="ltr">6,499</bdi> <span data-i18n="egp">EGP</span></span></div></div></div>
+  <div class="track"><div id="progress"></div></div>
+</div></div>
+
+<section class="blk wrap"><div class="shead"><span class="mono" data-i18n="sp.k">Specs</span><h2 data-i18n="sp.h">Small dial. Serious parts.</h2></div>
+  <div class="specs">
+    <div><span class="mono" data-i18n="s1.k">Display</span><b data-i18n="s1.v">1.4" AMOLED</b><span data-i18n="s1.p">466 × 466, 1,000 nits, sapphire cover</span></div>
+    <div><span class="mono" data-i18n="s2.k">Chip</span><b data-i18n="s2.v">Qamar Q1</b><span data-i18n="s2.p">Local control, under 50 ms response</span></div>
+    <div><span class="mono" data-i18n="s3.k">Connectivity</span><b data-i18n="s3.v">Wi-Fi 6 · Thread</b><span data-i18n="s3.p">Bluetooth 5.3 and an IR blaster for any AC</span></div>
+    <div><span class="mono" data-i18n="s4.k">Battery</span><b data-i18n="s4.v">2,000 mAh</b><span data-i18n="s4.p">Up to 30 days off the wall, USB-C</span></div>
+    <div><span class="mono" data-i18n="s5.k">Body</span><b data-i18n="s5.v">Aluminium</b><span data-i18n="s5.p">Knurled ring, 62 mm across, 18 mm thin</span></div>
+    <div><span class="mono" data-i18n="s6.k">Repair</span><b data-i18n="s6.v">4 screws</b><span data-i18n="s6.p">No glue, parts and service in Cairo</span></div>
+  </div>
+</section>
+<section class="blk wrap" id="buy"><div class="shead"><span class="mono" data-i18n="b.k">Pre-order</span><h2 data-i18n="b.h">Choose your finish.</h2><p data-i18n="b.p">First batch ships in January. Pay a 1,000 EGP deposit by InstaPay, the rest on delivery.</p></div>
+  <div class="buy">
+    <div class="swatches"><button class="sw" type="button" data-fin="sand" aria-pressed="true"><i style="background:linear-gradient(135deg,#e6dccb,#a99f8f)"></i><span data-i18n="f1">Sand</span></button><button class="sw" type="button" data-fin="graphite" aria-pressed="false"><i style="background:linear-gradient(135deg,#6b6f76,#25272b)"></i><span data-i18n="f2">Graphite</span></button></div>
+    <div class="qty"><button type="button" id="minus" aria-label="-">−</button><b id="qn">1</b><button type="button" id="plus" aria-label="+">+</button><span class="total" id="total"></span></div>
+    <div><a class="cta" id="order" target="_blank" rel="noopener" data-i18n="order">Pre-order on WhatsApp</a></div>
+    <p class="note" data-i18n="demo">Concept demo: an invented product. Orders go to Scrollar's WhatsApp.</p>
+  </div>
+</section>
+<footer class="wrap"><span data-i18n="foot">Qamar One · a product launch concept by Scrollar</span><a id="backLink" href="../../" data-i18n="back">More Scrollar work</a></footer>
+
+<script src="product.js"></script>
+<script type="importmap">{"imports":{"three":"../../vendor/three.module.js","three/addons/":"../../vendor/addons/"}}</script>
+<script type="module" src="scene.js"></script>
+</body>
+</html>
