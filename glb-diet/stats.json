@@ -1,0 +1,56 @@
+{
+  "models": [
+    {
+      "slug": "boombox",
+      "name": "BoomBox",
+      "type": "Product",
+      "credit": "Khronos glTF Sample Assets, CC0",
+      "before": {
+        "file": "models/BoomBox.glb",
+        "bytes": 10614184,
+        "tris": 6036,
+        "textureCount": 4,
+        "textureMaxPx": 2048,
+        "textureMime": "PNG",
+        "textureBytes": 10404597,
+        "draws": 1
+      },
+      "after": {
+        "file": "models/BoomBox-opt.glb",
+        "bytes": 188700,
+        "tris": 5706,
+        "textureCount": 4,
+        "textureMaxPx": 1024,
+        "textureMime": "WebP",
+        "textureBytes": 138730,
+        "draws": 1
+      }
+    },
+    {
+      "slug": "chess",
+      "name": "A Beautiful Game",
+      "type": "Scene",
+      "credit": "Khronos glTF Sample Assets, CC0 (model by Alex Jamerson)",
+      "before": {
+        "file": "models/ABeautifulGame.glb",
+        "bytes": 42977928,
+        "tris": 1499072,
+        "textureCount": 33,
+        "textureMaxPx": 2048,
+        "textureMime": "JPEG",
+        "textureBytes": 18930095,
+        "draws": 49
+      },
+      "after": {
+        "file": "models/ABeautifulGame-opt.glb",
+        "bytes": 4849872,
+        "tris": 443288,
+        "textureCount": 33,
+        "textureMaxPx": 1024,
+        "textureMime": "WebP",
+        "textureBytes": 1808112,
+        "draws": 15
+      }
+    }
+  ]
+}

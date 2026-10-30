@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GLB Diet, a Scrollar case study</title>
+<meta name="description" content="A before and after study: the same 3D model, optimised for the web. Real numbers on size, triangles and texture memory.">
+<meta name="theme-color" content="#0b0b0f">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script type="module" crossorigin src="/scrollar-work/glb-diet/assets/main-CMyhVQK8.js"></script>
+  <link rel="stylesheet" crossorigin href="/scrollar-work/glb-diet/assets/style-CavMK1mm.css">
+</head>
+<body>
+<nav class="nav">
+  <a class="logo" href="https://karim-alwakil.github.io/scrollar-work/" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 34" aria-hidden="true"><rect x="4" y="2" width="16" height="30" rx="4" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>
+    <span>Scrollar</span>
+    <span class="tag">GLB Diet</span>
+  </a>
+  <a class="btn" href="https://karim-alwakil.github.io/scrollar-work/" target="_blank" rel="noopener">All work</a>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="mono">Case study, 2026</span>
+    <h1>Your GLB on a diet.<br><em>Same model, 10x lighter.</em></h1>
+    <p>Clients ship a 43 MB Blender export, the browser spends 10 seconds staring at a blank canvas, bounce. This page shows the fix, side by side, on real public models, with every number measured.</p>
+    <div class="bignum">
+      <div><strong>43 MB</strong><span>raw blender export</span></div>
+      <div class="arrow" aria-hidden="true">to</div>
+      <div><strong>4.85 MB</strong><span>web ready glb</span></div>
+      <div class="arrow" aria-hidden="true">meaning</div>
+      <div><strong>-88%</strong><span>on the wire</span></div>
+    </div>
+    <div class="ctas">
+      <a class="btn solid" href="#viewer">Open split viewer</a>
+      <a class="btn" href="#howto">What I did</a>
+    </div>
+  </div>
+</header>
+
+<section id="viewer" class="section">
+  <div class="wrap">
+    <header class="sh">
+      <span class="mono">Section 01, side by side</span>
+      <h2>Drag the divider. Same camera, two files.</h2>
+      <p>The left canvas loads the raw GLB. The right one loads the optimised GLB. Orbit on either side and both move together. Toggle wireframe to see the topology.</p>
+    </header>
+
+    <div class="controls">
+      <div class="pills" role="tablist" aria-label="Model">
+        <button role="tab" class="pill on" data-model="boombox">BoomBox, product</button>
+        <button role="tab" class="pill" data-model="chess">A Beautiful Game, scene</button>
+      </div>
+      <div class="pills">
+        <button class="pill ghost" id="wire" aria-pressed="false">Wireframe</button>
+        <button class="pill ghost" id="reset">Reset view</button>
+      </div>
+    </div>
+
+    <div id="split" class="split" aria-label="Before and after viewer">
+      <div class="side left">
+        <canvas id="c-before" aria-label="Before, raw GLB"></canvas>
+      </div>
+      <div class="side right" id="right-side">
+        <canvas id="c-after" aria-label="After, optimised GLB"></canvas>
+      </div>
+      <div class="label label-l"><span class="dot red"></span>Before, raw export</div>
+      <div class="label label-r"><span class="dot green"></span>After, optimised</div>
+      <div class="stats stats-l" id="stats-before"></div>
+      <div class="stats stats-r" id="stats-after"></div>
+      <div class="loader loader-l" id="load-before" hidden><div class="bar"><i></i></div><span>Scroll to load raw GLB</span></div>
+      <div class="loader loader-r" id="load-after" hidden><div class="bar"><i></i></div><span>Loading optimised GLB</span></div>
+      <div class="divider" id="divider" role="separator" aria-label="Drag to compare" tabindex="0"></div>
+    </div>
+
+    <table class="statstable" id="statstable" aria-label="Measured difference">
+      <thead><tr><th>Metric</th><th>Before</th><th>After</th><th>Saving</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</section>
+
+<section id="howto" class="section dark">
+  <div class="wrap">
+    <header class="sh">
+      <span class="mono">Section 02, the recipe</span>
+      <h2>Five steps, measured on your model.</h2>
+      <p>The whole pipeline runs on <code>@gltf-transform/cli</code>. No manual Blender re-export, no quality loss on the hero views.</p>
+    </header>
+    <ol class="steps">
+      <li><span class="n">01</span><h3>Dedup, prune, weld</h3><p>Remove duplicate accessors and unused data, merge coincident vertices. Free, no visual change.</p><code>gltf-transform dedup in.glb mid.glb</code></li>
+      <li><span class="n">02</span><h3>Simplify geometry, carefully</h3><p>Target 70 to 95 percent of original tris on dense meshes. Preserve silhouette by locking boundary edges.</p><code>gltf-transform simplify mid.glb mid.glb --ratio 0.75 --error 0.001</code></li>
+      <li><span class="n">03</span><h3>Compress meshes with meshopt</h3><p>Quantise and compress positions, normals and UVs. Decoded in the browser with the meshopt decoder.</p><code>gltf-transform meshopt mid.glb mid.glb --level medium</code></li>
+      <li><span class="n">04</span><h3>Textures to WebP, right-sized</h3><p>Cap maps at 2048, drop to 1024 for small on-screen area, convert PNG and JPEG to WebP.</p><code>gltf-transform webp mid.glb out.glb --slots "*" --quality 80</code></li>
+      <li><span class="n">05</span><h3>One command, same result</h3><p>In production I run the full chain so clients can reproduce it.</p><code>gltf-transform optimize in.glb out.glb --compress meshopt --texture-compress webp --texture-size 1024</code></li>
+    </ol>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <header class="sh">
+      <span class="mono">Section 03, checklist</span>
+      <h2>What I check on your model before I touch it.</h2>
+    </header>
+    <ul class="check">
+      <li><b>Scale and units</b><span>metres, with the pivot at the base. Avoid 100x models.</span></li>
+      <li><b>Pivots</b><span>origin on the ground, child parts have local pivots for animation.</span></li>
+      <li><b>Normals</b><span>consistent facing, no inverted shells. Smoothing groups match the design.</span></li>
+      <li><b>UVs</b><span>no overlaps on unique maps, tiling only where it is meant to tile.</span></li>
+      <li><b>Texture sizes</b><span>power-of-two, matched to on-screen pixels. 4k is almost never needed on the web.</span></li>
+      <li><b>Material count</b><span>merged where possible so draw calls drop.</span></li>
+      <li><b>Animation clips</b><span>named, trimmed, no empty tracks, in seconds.</span></li>
+      <li><b>Compression support</b><span>your three.js loader has the right decoder, meshopt or Draco or KTX2.</span></li>
+    </ul>
+  </div>
+</section>
+
+<section class="section cta">
+  <div class="wrap">
+    <h2>Send me your GLB or .blend.</h2>
+    <p>I will reply with the before and after numbers for your file, free, in 24 hours.</p>
+    <a class="btn solid big" href="https://karim-alwakil.github.io/scrollar-work/" target="_blank" rel="noopener">Go to Scrollar</a>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap">
+    <span>Concept demo by Scrollar</span>
+    <a href="credits.html">Credits and licences</a>
+  </div>
+</footer>
+
+</body>
+</html>
