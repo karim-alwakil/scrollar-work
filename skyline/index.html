@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Skyline Residences: explore the tower in 3D</title>
+  <meta name="description" content="Skyline Residences is a concept real estate tower explorer by Scrollar. Hover a floor, slice it open, filter residences, open a unit sheet and see the view from any balcony at any hour." />
+  <meta name="theme-color" content="#16191e" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23e2b26b'/%3E%3Cpath d='M11 25V11l5-3v17M16 25V8M16 13l5 2v10' stroke='%2314171c' stroke-width='2' fill='none'/%3E%3C/svg%3E" />
+  <!-- Self hosted fonts (OFL, latin subset), preloaded so the first paint already uses them. -->
+  <link rel="preload" href="/scrollar-work/skyline/fonts/instrument-serif.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/scrollar-work/skyline/fonts/manrope.woff2" as="font" type="font/woff2" crossorigin />
+  <style>@font-face{font-family:Instrument Serif;font-style:normal;font-weight:400;font-display:swap;src:url(/scrollar-work/skyline/fonts/instrument-serif.woff2)format("woff2")}@font-face{font-family:Instrument Serif;font-style:italic;font-weight:400;font-display:swap;src:url(/scrollar-work/skyline/fonts/instrument-serif-italic.woff2)format("woff2")}@font-face{font-family:Manrope;font-style:normal;font-weight:400 800;font-display:swap;src:url(/scrollar-work/skyline/fonts/manrope.woff2)format("woff2")}</style>
+  <script type="module" crossorigin src="/scrollar-work/skyline/assets/main-tEXdvZwo.js"></script>
+  <link rel="stylesheet" crossorigin href="/scrollar-work/skyline/assets/main-Bu4Y3R82.css">
+</head>
+<body>
+  <!-- Static loader: paints before any script runs; the app updates and hides it. -->
+  <div class="loader" id="boot" role="status" aria-live="polite">
+    <p class="loader-mark">Skyline <em>Residences</em></p>
+    <div class="loader-bar"><span id="boot-bar"></span></div>
+    <p class="loader-pct" id="boot-pct">Loading the tower</p>
+  </div>
+  <style>body{background:#121317;margin:0}.loader{z-index:50;color:#f6f3ee;text-align:center;background:radial-gradient(120% 90% at 50% 70%,#3a3026 0%,#1b1b1f 55%,#121317 100%);place-content:center;justify-items:center;gap:18px;padding:0 16px;font-family:Manrope,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Noto Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;transition:opacity .8s cubic-bezier(.22,1,.36,1),visibility .8s;display:grid;position:fixed;top:0;bottom:0;left:0;right:0}.loader.is-done{opacity:0;visibility:hidden}.loader-mark{letter-spacing:-.01em;margin:0;font:400 clamp(48px,7.4vw,108px)/1 Instrument Serif,Georgia,serif}.loader-mark em{color:#ffe2b6}.loader-bar{background:#ffffff1f;border-radius:2px;width:260px;height:2px;overflow:hidden}.loader-bar span{transform-origin:0;background:#e2b26b;height:100%;transition:transform .35s cubic-bezier(.22,1,.36,1);display:block;transform:scaleX(.04)}.loader-pct{color:#a8a299;letter-spacing:.04em;font-variant-numeric:tabular-nums;margin:0;font-size:12px}</style>
+  <div id="root"></div>
+</body>
+</html>
